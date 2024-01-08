@@ -759,3 +759,240 @@ vector_freertos:
             targets: debug release
             project_path: linker
             package_path: project-root-path/iar
+tiled_freertos:
+  section-type: application
+  belong_to: set.board.${board}
+  dependency:
+  - driver.fbdev
+  - driver.video-common
+  - driver.clock
+  - middleware.vglite
+  - middleware.freertos-kernel.heap_4
+  - middleware.freertos-kernel.cm33_trustzone.non_secure
+  merge_segment:
+    - rt700_example_default_segment
+  contents:
+    configuration:
+      tools:
+        __common__:
+          config:
+            __common__:
+              cc-define:
+                CUSTOM_VGLITE_MEMORY_CONFIG=1:
+              as-define:
+                __STARTUP_INITIALIZE_NONCACHEDATA:
+          debugger-config:
+            mcu: MIMXRT798S
+            mcu_vendor: NXP
+            jlink: MIMXRT798S_M33_0
+        __remove__:
+          kds:
+          atl:
+          mdk:
+        armgcc:
+          config:
+            __common__:
+              as-flags:
+              - "-mcpu=cortex-m33"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              - "-mthumb"
+              cc-flags:
+              - "-mcpu=cortex-m33"
+              - "-Wall"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              - "-mthumb"
+              - "-MMD"
+              - "-MP"
+              cx-flags:
+              - "-mcpu=cortex-m33"
+              - "-Wall"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              - "-mthumb"
+              - "-MMD"
+              - "-MP"
+              ld-flags:
+              - "-mcpu=cortex-m33"
+              - "-Wall"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
+              cp-define:
+                MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+            debug:
+              target: debug
+              identifier: Debug
+              config: debug
+            release:
+              target: release
+              identifier: Release
+              config: release
+        iar:
+          config:
+            __common__:
+              as-flags:
+              - "--cpu=cortex-m33.no_se"
+              - "--fpu=vfpv5_sp_d16"
+              cc-flags:
+              - "--cpu=cortex-m33.no_se"
+              - "--fpu=vfpv5_sp_d16"
+              - "--diag_suppress Pa082,Pa050,Pa092"
+              cx-flags:
+              - "--cpu=cortex-m33.no_se"
+              - "--fpu=vfpv5_sp_d16"
+              - "--diag_suppress Pa082,Pa050,Pa092"
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
+              cp-define:
+                MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+              debugger_extra_options:
+              - "--jlink_only_run_status_check"
+            debug:
+              identifier: Debug
+              target: debug
+              config: debug
+            release:
+              identifier: Release
+              target: release
+              config: release
+        mcux:
+          config:
+            __common__:
+              as-flags:
+              - "-mcpu=cortex-m33"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              cc-flags:
+              - "-mcpu=cortex-m33"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              cx-flags:
+              - "-mcpu=cortex-m33"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              ld-flags:
+              - "-mcpu=cortex-m33"
+              - "-mfloat-abi=hard"
+              - "-mfpu=fpv5-sp-d16"
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
+                FSL_SDK_DRIVER_QUICK_ACCESS_ENABLE: 1
+              cp-define:
+                MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+            debug:
+              target: debug
+              identifier: Debug
+              config: debug
+            release:
+              target: release
+              identifier: Release
+              config: release
+    document:
+      name: tiled_freertos_${multicore_foldername}
+      readme:
+      - boards/${board}/vglite_examples/tiled_freertos/board.readme
+      - middleware/vglite/example/tiled_freertos/tiled_freertos.readme
+      category: vglite_examples/tiled_freertos/
+      brief: This example shows how to use the vglite component. This application
+        draw a polygon vector graphic with high render quality on blue buffer.
+    project-root-path: boards/${board}/vglite_examples/tiled_freertos
+    modules:
+      tiled_freertos:
+        required: true
+        cc-include:
+        - path: boards/${board}/vglite_examples/vglite_support
+          project_path: board
+        - path: boards/${board}/vglite_examples/vglite_support
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: board
+        - path: middleware/vglite/example/vglite_window
+          package_path: boards/${board}/vglite_examples/vglite_window
+          project_path: source
+        files:
+        - source: middleware/vglite/example/tiled_freertos/tiled_freertos.c
+          merge-to-main: main
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: source
+        - source: boards/${board}/display_support.h
+          package_path: project-root-path
+          project_path: board
+        - source: boards/${board}/display_support.c
+          package_path: project-root-path
+          project_path: board
+        - source: boards/${board}/vglite_examples/vglite_support/vglite_support.h
+          project_path: board
+        - source: boards/${board}/vglite_examples/vglite_support/vglite_support.c
+          project_path: board
+        - source: middleware/vglite/example/vglite_window/vglite_window.h
+          package_path: boards/${board}/vglite_examples/vglite_window
+          project_path: source
+        - source: middleware/vglite/example/vglite_window/vglite_window.c
+          package_path: boards/${board}/vglite_examples/vglite_window
+          project_path: source
+      freertos_config:
+        required: true
+        cc-include:
+        - path: boards/${board}
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: source
+        - path: middleware/vglite/example/tiled_freertos
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: source
+        as-include:
+        - path: middleware/vglite/example/tiled_freertos
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: source
+        - path: boards/${board}
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: source
+        files:
+        - source: middleware/vglite/example/tiled_freertos/FreeRTOSConfig.h
+          merge-to-freertosconfig: main
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: source
+        - source: boards/${board}/FreeRTOSConfigBoard.h
+          merge-to-freertosconfig: sub
+          package_path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: source
+        - source: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}/pin_mux.c
+          package_path: boards/${board}/vglite_examples/tiled_freertos
+          project_path: board
+        - source: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}/pin_mux.h
+          package_path: boards/${board}/vglite_examples/tiled_freertos
+          project_path: board
+      pinset:
+        required: true
+        cc-include:
+        - path: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}
+          project_path: board
+        files:
+        - source: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}/hardware_init.c
+          merge-to-main: sub
+          project_path: board
+        - source: boards/${board}/vglite_examples/tiled_freertos/${multicore_foldername}/app.h
+          merge-to-main: sub
+          project_path: board
+      linker-file:
+        required: true
+        cc-include:
+        - path: boards/${board}/vglite_examples/tiled_freertos
+          project_path: board
+        files:
+          - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
+            attribute: linker-file
+            toolchains: iar
+            targets: debug release
+            project_path: linker
+            package_path: project-root-path/iar
+          - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
+            attribute: linker-file
+            toolchains: iar
+            targets: debug release
+            project_path: linker
+            package_path: project-root-path/iar
