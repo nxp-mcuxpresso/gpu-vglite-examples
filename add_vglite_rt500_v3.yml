@@ -1,0 +1,116 @@
+---
+middleware.vglite:
+  section-type: component
+  meta-name: middleware.vglite
+  contents:
+    repo_base_path: middleware/vglite
+    project_base_path: vglite
+    cc-include:
+    - repo_relative_path: inc
+    - repo_relative_path: VGLite
+    - repo_relative_path: VGLite/rtos
+    - repo_relative_path: VGLite/Series/gc255/0x40A
+    - repo_relative_path: VGLiteKernel
+    - repo_relative_path: VGLiteKernel/rtos
+    files:
+    - source: inc/vg_lite.h
+    - source: VGLite/vg_lite.c
+    - source: VGLite/vg_lite_image.c
+    - source: VGLite/vg_lite_matrix.c
+    - source: VGLite/vg_lite_path.c
+    - source: VGLite/vg_lite_stroke.c
+    - source: VGLite/vg_lite_options.h
+    - source: VGLite/vg_lite_context.h
+    - source: VGLite/rtos/vg_lite_os.c
+    - source: VGLite/Series/gc255/0x40A/vg_lite_options.h
+    - source: VGLiteKernel/vg_lite_hal.h
+    - source: VGLiteKernel/vg_lite_hw.h
+    - source: VGLiteKernel/vg_lite_kernel.c
+    - source: VGLiteKernel/vg_lite_kernel.h
+    - source: VGLiteKernel/vg_lite_option.h
+    - source: VGLiteKernel/vg_lite_type.h
+    - source: VGLiteKernel/vg_lite_debug.h
+    - source: VGLiteKernel/rtos/vg_lite_hal.c
+    - source: VGLiteKernel/rtos/vg_lite_platform.h
+    - source: RELEASE_NOTES.txt
+    - source: LICENSE.txt
+      hidden: true
+      exclude: true
+    configuration:
+      cc-define:
+        VG_COMMAND_CALL: 1
+        VG_TARGET_FAST_CLEAR: 0
+        GCID_REV_CID: gc255/0x40A
+  belong_to: set.middleware.vglite
+  section_info:
+    description: vglite library
+    type: middleware
+    version: 4.0.48
+    user_visible: never
+    full_name: Middleware vglite
+    taxonomy:
+      csub: vglite
+      belong_to: vglite
+    display_name: vglite
+set.middleware.vglite:
+  section-type: set
+  belong_to: set.middleware.vglite
+  section_info:
+    fixed_id: verisilicon_vglite
+    version: 1.0.0
+    display_name: vglite
+    description: vglite lib
+    set_location:
+      repo_base_path: middleware/vglite
+    type: middleware
+    vendor: NXP
+    product:
+      kex_package:
+        kex_web_ui:
+          ui_control: true
+          ui_release_specific: true
+          ui_control_default: true
+          ui_category: Middleware
+        scr:
+        - scr.middleware.vglite
+      cmsis_pack:
+        vendor: NXP
+        supported: false
+        scr:
+        - scr.middleware.vglite
+    component_taxonomy:
+      vglite:
+        cclass: vglite
+        cgroup: vglite graphics library
+  dependency:
+    allOf:
+    - anyOf:
+      - device:
+        - MIMXRT595S
+      - board:
+        - evkmimxrt595
+license.vglite:
+  section-type: license
+  belong_to: set.middleware.vglite
+  contents:
+    repo_base_path: middleware/vglite
+    files:
+    - source: LICENSE.txt
+  section_info:
+    Outgoing License: MIT
+scr.middleware.vglite:
+  belong_to: set.middleware.vglite
+  section-type: scr
+  contents:
+    license:
+    - license.vglite
+    Name: vglite
+    Version: 4.0.48
+    Format: source code
+    Description: VeriSilicon's platform independent VGLite Graphics library
+    Location: middleware/vglite
+    Origin: VeriSilicon (MIT), Raph Levien, Nicolas Silva (Apache-2.0)
+    Url: http://www.verisilicon.com/, https://github.com/linebender/kurbo
+  dependency:
+    allOf:
+    - middleware.vglite
