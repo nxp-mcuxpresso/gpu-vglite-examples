@@ -73,7 +73,7 @@ clear_freertos:
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
-  - middleware.freertos-kernel.cm33_trustzone.non_secure
+  - middleware.freertos-kernel.cm33_non_trustzone
   merge_segment:
     - rt700_example_default_segment
   contents:
@@ -291,7 +291,7 @@ tiger_freertos:
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
-  - middleware.freertos-kernel.cm33_trustzone.non_secure
+  - middleware.freertos-kernel.cm33_non_trustzone
   merge_segment:
     - rt700_example_default_segment
   contents:
@@ -531,7 +531,7 @@ vector_freertos:
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
-  - middleware.freertos-kernel.cm33_trustzone.non_secure
+  - middleware.freertos-kernel.cm33_non_trustzone
   merge_segment:
     - rt700_example_default_segment
   contents:
@@ -768,7 +768,7 @@ tiled_freertos:
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
-  - middleware.freertos-kernel.cm33_trustzone.non_secure
+  - middleware.freertos-kernel.cm33_non_trustzone
   merge_segment:
     - rt700_example_default_segment
   contents:
@@ -1005,7 +1005,7 @@ clock_freertos:
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
-  - middleware.freertos-kernel.cm33_trustzone.non_secure
+  - middleware.freertos-kernel.cm33_non_trustzone
   merge_segment:
     - rt700_example_default_segment
   contents:
