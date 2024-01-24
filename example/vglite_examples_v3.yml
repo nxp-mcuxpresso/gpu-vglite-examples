@@ -288,6 +288,16 @@ tiger_freertos:
   dependency:
   - driver.fbdev
   - driver.video-common
+  - driver.display-common
+  - driver.lcdif
+  - driver.lcdifv2
+  - driver.dc-fb-lcdif
+  - driver.dc-fb-lcdifv2
+  - driver.elcdif
+  - driver.display-hx8394
+  - driver.display-rm68200
+  - driver.display-rm68191
+  - driver.display-mipi-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
@@ -528,6 +538,16 @@ vector_freertos:
   dependency:
   - driver.fbdev
   - driver.video-common
+  - driver.display-common
+  - driver.lcdif
+  - driver.lcdifv2
+  - driver.dc-fb-lcdif
+  - driver.dc-fb-lcdifv2
+  - driver.elcdif
+  - driver.display-hx8394
+  - driver.display-rm68200
+  - driver.display-rm68191
+  - driver.display-mipi-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
@@ -765,6 +785,16 @@ tiled_freertos:
   dependency:
   - driver.fbdev
   - driver.video-common
+  - driver.display-common
+  - driver.lcdif
+  - driver.lcdifv2
+  - driver.dc-fb-lcdif
+  - driver.dc-fb-lcdifv2
+  - driver.elcdif
+  - driver.display-hx8394
+  - driver.display-rm68200
+  - driver.display-rm68191
+  - driver.display-mipi-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
@@ -1002,6 +1032,16 @@ clock_freertos:
   dependency:
   - driver.fbdev
   - driver.video-common
+  - driver.display-common
+  - driver.lcdif
+  - driver.lcdifv2
+  - driver.dc-fb-lcdif
+  - driver.dc-fb-lcdifv2
+  - driver.elcdif
+  - driver.display-hx8394
+  - driver.display-rm68200
+  - driver.display-rm68191
+  - driver.display-mipi-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
