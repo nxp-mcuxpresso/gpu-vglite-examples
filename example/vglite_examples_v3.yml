@@ -561,7 +561,7 @@ vector_freertos:
           config:
             __common__:
               cc-define:
-                CUSTOM_VGLITE_MEMORY_CONFIG=1:
+                CUSTOM_VGLITE_MEMORY_CONFIG=0:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -808,7 +808,7 @@ tiled_freertos:
           config:
             __common__:
               cc-define:
-                CUSTOM_VGLITE_MEMORY_CONFIG=1:
+                CUSTOM_VGLITE_MEMORY_CONFIG=0:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -1055,7 +1055,7 @@ clock_freertos:
           config:
             __common__:
               cc-define:
-                CUSTOM_VGLITE_MEMORY_CONFIG=1:
+                CUSTOM_VGLITE_MEMORY_CONFIG=0:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
