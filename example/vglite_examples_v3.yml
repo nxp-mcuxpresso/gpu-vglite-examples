@@ -82,6 +82,8 @@ clear_freertos:
         __common__:
           config:
             __common__:
+              cc-define:
+                SDK_DEBUGCONSOLE_UART=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -312,6 +314,7 @@ tiger_freertos:
             __common__:
               cc-define:
                 CUSTOM_VGLITE_MEMORY_CONFIG=1:
+                SDK_DEBUGCONSOLE_UART=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -562,6 +565,7 @@ vector_freertos:
             __common__:
               cc-define:
                 CUSTOM_VGLITE_MEMORY_CONFIG=0:
+                SDK_DEBUGCONSOLE_UART=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -809,6 +813,7 @@ tiled_freertos:
             __common__:
               cc-define:
                 CUSTOM_VGLITE_MEMORY_CONFIG=0:
+                SDK_DEBUGCONSOLE_UART=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -1056,6 +1061,7 @@ clock_freertos:
             __common__:
               cc-define:
                 CUSTOM_VGLITE_MEMORY_CONFIG=0:
+                SDK_DEBUGCONSOLE_UART=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
