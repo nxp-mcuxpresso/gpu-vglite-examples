@@ -544,7 +544,7 @@ tiger_freertos:
           - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
             attribute: linker-file
             toolchains: iar
-            targets: debug release
+            targets: flash_debug flash_release
             project_path: linker
             package_path: project-root-path/iar
           - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
@@ -804,7 +804,7 @@ vector_freertos:
           - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
             attribute: linker-file
             toolchains: iar
-            targets: debug release
+            targets: flash_debug flash_release
             project_path: linker
             package_path: project-root-path/iar
           - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
@@ -1064,7 +1064,7 @@ tiled_freertos:
           - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
             attribute: linker-file
             toolchains: iar
-            targets: debug release
+            targets: flash_debug flash_release
             project_path: linker
             package_path: project-root-path/iar
           - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
@@ -1333,7 +1333,7 @@ clock_freertos:
           - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
             attribute: linker-file
             toolchains: iar
-            targets: debug release
+            targets: flash_debug flash_release
             project_path: linker
             package_path: project-root-path/iar
           - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
