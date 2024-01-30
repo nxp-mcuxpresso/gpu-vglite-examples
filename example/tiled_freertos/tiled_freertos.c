@@ -23,7 +23,11 @@
  ******************************************************************************/
 
 #define DEFAULT_SIZE       256.0f;
+#if defined(CPU_MIMXRT798SGFOA_cm33_core0)
+#define TILED_BUFFER1_ADDR 0x60400000U
+#else
 #define TILED_BUFFER1_ADDR 0x28400000U
+#endif
 
 /*******************************************************************************
  * Prototypes
