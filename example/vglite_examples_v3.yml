@@ -267,35 +267,36 @@ clear_freertos:
           merge-to-main: sub
           project_path: board
       linker-file:
-        required: true
-        cc-include:
-        - path: boards/${board}/vglite_examples/clear_freertos
-          project_path: board
-        files:
-          - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/armgcc
-          - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/armgcc
+        __replace__:
+          required: true
+          cc-include:
+          - path: boards/${board}/vglite_examples/clear_freertos
+            project_path: board
+          files:
+            - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/armgcc
 tiger_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -530,35 +531,36 @@ tiger_freertos:
           merge-to-main: sub
           project_path: board
       linker-file:
-        required: true
-        cc-include:
-        - path: boards/${board}/vglite_examples/tiger_freertos
-          project_path: board
-        files:
-          - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/armgcc
-          - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/armgcc
+        __replace__:
+          required: true
+          cc-include:
+          - path: boards/${board}/vglite_examples/tiger_freertos
+            project_path: board
+          files:
+            - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/armgcc
 vector_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -790,35 +792,36 @@ vector_freertos:
           merge-to-main: sub
           project_path: board
       linker-file:
-        required: true
-        cc-include:
-        - path: boards/${board}/vglite_examples/vector_freertos
-          project_path: board
-        files:
-          - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/armgcc
-          - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/armgcc
+        __replace__:
+          required: true
+          cc-include:
+          - path: boards/${board}/vglite_examples/vector_freertos
+            project_path: board
+          files:
+            - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/armgcc
 tiled_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -1050,35 +1053,36 @@ tiled_freertos:
           merge-to-main: sub
           project_path: board
       linker-file:
-        required: true
-        cc-include:
-        - path: boards/${board}/vglite_examples/tiled_freertos
-          project_path: board
-        files:
-          - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/armgcc
-          - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/armgcc
+        __replace__:
+          required: true
+          cc-include:
+          - path: boards/${board}/vglite_examples/tiled_freertos
+            project_path: board
+          files:
+            - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/armgcc
 clock_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -1319,32 +1323,33 @@ clock_freertos:
           merge-to-main: sub
           project_path: board
       linker-file:
-        required: true
-        cc-include:
-        - path: boards/${board}/vglite_examples/clock_freertos
-          project_path: board
-        files:
-          - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
-            attribute: linker-file
-            toolchains: iar
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/iar
-          - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: debug release
-            project_path: linker
-            package_path: project-root-path/armgcc
-          - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
-            attribute: linker-file
-            toolchains: armgcc
-            targets: flash_debug flash_release
-            project_path: linker
-            package_path: project-root-path/armgcc
+        __replace__:
+          required: true
+          cc-include:
+          - path: boards/${board}/vglite_examples/clock_freertos
+            project_path: board
+          files:
+            - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_ram.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_flash.icf
+              attribute: linker-file
+              toolchains: iar
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/iar
+            - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_ram.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_flash.ld
+              attribute: linker-file
+              toolchains: armgcc
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/armgcc
