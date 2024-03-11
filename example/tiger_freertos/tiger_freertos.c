@@ -50,7 +50,7 @@ volatile bool s_frameDone = false;
 #define VGLITE_COMMAND_BUFFER_SZ (128 * 1024)
 /* On RT595S */
 #if defined(CPU_MIMXRT595SFFOC_cm33) || defined(CPU_MIMXRT798SGFOA_cm33_core0)
-#define VGLITE_HEAP_SZ 0x300000 /* 3 MB */
+#define VGLITE_HEAP_SZ 0x100000 /* 1 MB */
 /* On RT1170 */
 #elif defined(CPU_MIMXRT1176DVMAA_cm7) || defined(CPU_MIMXRT1166DVM6A_cm7)
 #define VGLITE_HEAP_SZ 8912896 /* 8.5 MB */
