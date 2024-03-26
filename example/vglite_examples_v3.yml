@@ -304,15 +304,27 @@ tiger_freertos:
   - driver.fbdev
   - driver.video-common
   - driver.display-common
+  - driver.flexio
+  - driver.flexio_mculcd
+  - driver.flexio_mculcd_edma
+  - driver.dbi
+  - driver.dbi_flexio_edma
+  - driver.edma4
   - driver.lcdif
   - driver.lcdifv2
   - driver.dc-fb-lcdif
   - driver.dc-fb-lcdifv2
   - driver.elcdif
   - driver.display-hx8394
+  - driver.display-rm67162
   - driver.display-rm68200
   - driver.display-rm68191
+  - driver.display-rpi
+  - driver.dc-fb-ssd1963
+  - driver.ssd1963
+  - driver.mipi_dsi
   - driver.display-mipi-dsi-cmd
+  - driver.dc-fb-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
@@ -568,15 +580,27 @@ vector_freertos:
   - driver.fbdev
   - driver.video-common
   - driver.display-common
+  - driver.flexio
+  - driver.flexio_mculcd
+  - driver.flexio_mculcd_edma
+  - driver.dbi
+  - driver.dbi_flexio_edma
+  - driver.edma4
   - driver.lcdif
   - driver.lcdifv2
   - driver.dc-fb-lcdif
   - driver.dc-fb-lcdifv2
   - driver.elcdif
   - driver.display-hx8394
+  - driver.display-rm67162
   - driver.display-rm68200
   - driver.display-rm68191
+  - driver.display-rpi
+  - driver.dc-fb-ssd1963
+  - driver.ssd1963
+  - driver.mipi_dsi
   - driver.display-mipi-dsi-cmd
+  - driver.dc-fb-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
@@ -829,15 +853,27 @@ tiled_freertos:
   - driver.fbdev
   - driver.video-common
   - driver.display-common
+  - driver.flexio
+  - driver.flexio_mculcd
+  - driver.flexio_mculcd_edma
+  - driver.dbi
+  - driver.dbi_flexio_edma
+  - driver.edma4
   - driver.lcdif
   - driver.lcdifv2
   - driver.dc-fb-lcdif
   - driver.dc-fb-lcdifv2
   - driver.elcdif
   - driver.display-hx8394
+  - driver.display-rm67162
   - driver.display-rm68200
   - driver.display-rm68191
+  - driver.display-rpi
+  - driver.dc-fb-ssd1963
+  - driver.ssd1963
+  - driver.mipi_dsi
   - driver.display-mipi-dsi-cmd
+  - driver.dc-fb-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
@@ -1090,15 +1126,27 @@ clock_freertos:
   - driver.fbdev
   - driver.video-common
   - driver.display-common
+  - driver.flexio
+  - driver.flexio_mculcd
+  - driver.flexio_mculcd_edma
+  - driver.dbi
+  - driver.dbi_flexio_edma
+  - driver.edma4
   - driver.lcdif
   - driver.lcdifv2
   - driver.dc-fb-lcdif
   - driver.dc-fb-lcdifv2
   - driver.elcdif
   - driver.display-hx8394
+  - driver.display-rm67162
   - driver.display-rm68200
   - driver.display-rm68191
+  - driver.display-rpi
+  - driver.dc-fb-ssd1963
+  - driver.ssd1963
+  - driver.mipi_dsi
   - driver.display-mipi-dsi-cmd
+  - driver.dc-fb-dsi-cmd
   - driver.clock
   - middleware.vglite
   - middleware.freertos-kernel.heap_4
