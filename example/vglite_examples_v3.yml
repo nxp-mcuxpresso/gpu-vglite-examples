@@ -320,6 +320,7 @@ tiger_freertos:
   - driver.display-rm68200
   - driver.display-rm68191
   - driver.display-rpi
+  - driver.lpi2c
   - driver.dc-fb-dbi
   - driver.dbi_lcdif
   - driver.ssd1963
@@ -343,6 +344,7 @@ tiger_freertos:
                 SDK_DEBUGCONSOLE_UART=1:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
+                SDK_I2C_BASED_COMPONENT_USED=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -599,6 +601,7 @@ vector_freertos:
   - driver.display-rm68200
   - driver.display-rm68191
   - driver.display-rpi
+  - driver.lpi2c
   - driver.dc-fb-dbi
   - driver.dbi_lcdif
   - driver.ssd1963
@@ -622,6 +625,7 @@ vector_freertos:
                 SDK_DEBUGCONSOLE_UART=1:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
+                SDK_I2C_BASED_COMPONENT_USED=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -875,6 +879,7 @@ tiled_freertos:
   - driver.display-rm68200
   - driver.display-rm68191
   - driver.display-rpi
+  - driver.lpi2c
   - driver.dc-fb-dbi
   - driver.dbi_lcdif
   - driver.ssd1963
@@ -898,6 +903,7 @@ tiled_freertos:
                 SDK_DEBUGCONSOLE_UART=1:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
+                SDK_I2C_BASED_COMPONENT_USED=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -1151,6 +1157,7 @@ clock_freertos:
   - driver.display-rm68200
   - driver.display-rm68191
   - driver.display-rpi
+  - driver.lpi2c
   - driver.dc-fb-dbi
   - driver.dbi_lcdif
   - driver.ssd1963
@@ -1174,6 +1181,7 @@ clock_freertos:
                 SDK_DEBUGCONSOLE_UART=1:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
+                SDK_I2C_BASED_COMPONENT_USED=1:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
