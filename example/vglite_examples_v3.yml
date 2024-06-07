@@ -345,6 +345,8 @@ tiger_freertos:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
                 SDK_I2C_BASED_COMPONENT_USED=1:
+                SSD1963_DATA_WITDH=8:
+                FLEXIO_MCULCD_DATA_BUS_WIDTH=8:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -626,6 +628,8 @@ vector_freertos:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
                 SDK_I2C_BASED_COMPONENT_USED=1:
+                SSD1963_DATA_WITDH=8:
+                FLEXIO_MCULCD_DATA_BUS_WIDTH=8:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -904,6 +908,8 @@ tiled_freertos:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
                 SDK_I2C_BASED_COMPONENT_USED=1:
+                SSD1963_DATA_WITDH=8:
+                FLEXIO_MCULCD_DATA_BUS_WIDTH=8:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
@@ -1182,6 +1188,8 @@ clock_freertos:
                 MCUX_DBI_LEGACY=0:
                 DBI_USE_MIPI_PANEL=1:
                 SDK_I2C_BASED_COMPONENT_USED=1:
+                SSD1963_DATA_WITDH=8:
+                FLEXIO_MCULCD_DATA_BUS_WIDTH=8:
               as-define:
                 __STARTUP_INITIALIZE_NONCACHEDATA:
           debugger-config:
