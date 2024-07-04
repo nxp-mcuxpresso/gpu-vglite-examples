@@ -93,7 +93,6 @@ clear_freertos:
         __remove__:
           kds:
           atl:
-          mdk:
         armgcc:
           config:
             __common__:
@@ -188,6 +187,20 @@ clear_freertos:
                 FSL_SDK_DRIVER_QUICK_ACCESS_ENABLE: 1
               cp-define:
                 MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+            debug:
+              target: debug
+              identifier: Debug
+              config: debug
+            release:
+              target: release
+              identifier: Release
+              config: release
+        mdk:
+          config:
+            __common__:
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
             debug:
               target: debug
               identifier: Debug
@@ -297,6 +310,18 @@ clear_freertos:
               targets: flash_debug flash_release
               project_path: linker
               package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_ram.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/mdk
+            - source: boards/${board}/vglite_examples/clear_freertos/MIMXRT798Sxxxx_cm33_core0_flash.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/mdk
 tiger_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -356,7 +381,6 @@ tiger_freertos:
         __remove__:
           kds:
           atl:
-          mdk:
         armgcc:
           config:
             __common__:
@@ -453,6 +477,20 @@ tiger_freertos:
                 FSL_SDK_DRIVER_QUICK_ACCESS_ENABLE: 1
               cp-define:
                 MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+            debug:
+              target: debug
+              identifier: Debug
+              config: debug
+            release:
+              target: release
+              identifier: Release
+              config: release
+        mdk:
+          config:
+            __common__:
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
             debug:
               target: debug
               identifier: Debug
@@ -580,6 +618,18 @@ tiger_freertos:
               targets: flash_debug flash_release
               project_path: linker
               package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_ram.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/mdk
+            - source: boards/${board}/vglite_examples/tiger_freertos/MIMXRT798Sxxxx_cm33_core0_flash.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/mdk
 vector_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -639,7 +689,6 @@ vector_freertos:
         __remove__:
           kds:
           atl:
-          mdk:
         armgcc:
           config:
             __common__:
@@ -736,6 +785,20 @@ vector_freertos:
                 FSL_SDK_DRIVER_QUICK_ACCESS_ENABLE: 1
               cp-define:
                 MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+            debug:
+              target: debug
+              identifier: Debug
+              config: debug
+            release:
+              target: release
+              identifier: Release
+              config: release
+        mdk:
+          config:
+            __common__:
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
             debug:
               target: debug
               identifier: Debug
@@ -860,6 +923,18 @@ vector_freertos:
               targets: flash_debug flash_release
               project_path: linker
               package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_ram.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/mdk
+            - source: boards/${board}/vglite_examples/vector_freertos/MIMXRT798Sxxxx_cm33_core0_flash.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/mdk
 tiled_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -919,7 +994,6 @@ tiled_freertos:
         __remove__:
           kds:
           atl:
-          mdk:
         armgcc:
           config:
             __common__:
@@ -1016,6 +1090,20 @@ tiled_freertos:
                 FSL_SDK_DRIVER_QUICK_ACCESS_ENABLE: 1
               cp-define:
                 MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+            debug:
+              target: debug
+              identifier: Debug
+              config: debug
+            release:
+              target: release
+              identifier: Release
+              config: release
+        mdk:
+          config:
+            __common__:
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
             debug:
               target: debug
               identifier: Debug
@@ -1140,6 +1228,18 @@ tiled_freertos:
               targets: flash_debug flash_release
               project_path: linker
               package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_ram.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/mdk
+            - source: boards/${board}/vglite_examples/tiled_freertos/MIMXRT798Sxxxx_cm33_core0_flash.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/mdk
 clock_freertos:
   section-type: application
   belong_to: set.board.${board}
@@ -1199,7 +1299,6 @@ clock_freertos:
         __remove__:
           kds:
           atl:
-          mdk:
         armgcc:
           config:
             __common__:
@@ -1296,6 +1395,20 @@ clock_freertos:
                 FSL_SDK_DRIVER_QUICK_ACCESS_ENABLE: 1
               cp-define:
                 MIMXRT798S_M33_0: NXP MIMXRT798S_M33_0
+            debug:
+              target: debug
+              identifier: Debug
+              config: debug
+            release:
+              target: release
+              identifier: Release
+              config: release
+        mdk:
+          config:
+            __common__:
+              cc-define:
+                CPU_MIMXRT798SGFOA_cm33_core0:
+                BOOT_HEADER_ENABLE: 1
             debug:
               target: debug
               identifier: Debug
@@ -1429,3 +1542,15 @@ clock_freertos:
               targets: flash_debug flash_release
               project_path: linker
               package_path: project-root-path/armgcc
+            - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_ram.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: debug release
+              project_path: linker
+              package_path: project-root-path/mdk
+            - source: boards/${board}/vglite_examples/clock_freertos/MIMXRT798Sxxxx_cm33_core0_flash.scf
+              attribute: linker-file
+              toolchains: mdk
+              targets: flash_debug flash_release
+              project_path: linker
+              package_path: project-root-path/mdk
