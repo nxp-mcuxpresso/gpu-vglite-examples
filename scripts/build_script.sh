@@ -41,30 +41,34 @@ echo -e "iar binary release name: ${exec_release_iar}"
 echo -e "iar binary flash debug name: ${exec_flash_debug_iar}"
 echo -e "iar binary flash release name: ${exec_flash_release_iar}"
 
-echo -e ""
-echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3"
-echo -e ""
-west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3
-cp build_cmake/${exec_name} ${exec_debug_armgcc}
-rm -rf build_cmake
-echo -e ""
-echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4"
-echo -e ""
-west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4
-cp build_cmake/${exec_name} ${exec_release_armgcc}
-rm -rf build_cmake
-echo -e ""
-echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $5"
-echo -e ""
-west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $5
-cp build_cmake/${exec_name} ${exec_flash_debug_armgcc}
-rm -rf build_cmake
-echo -e ""
-echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $6"
-echo -e ""
-west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $6
-cp build_cmake/${exec_name} ${exec_flash_release_armgcc}
-rm -rf build_cmake
+# cube_freertos only builds on iar debug and iar release targets
+if [ "$2" != "cube_freertos" ]; then
+  echo -e ""
+  echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3"
+  echo -e ""
+  west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3
+  cp build_cmake/${exec_name} ${exec_debug_armgcc}
+  rm -rf build_cmake
+  echo -e ""
+  echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4"
+  echo -e ""
+  west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4
+  cp build_cmake/${exec_name} ${exec_release_armgcc}
+  rm -rf build_cmake
+  echo -e ""
+  echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $5"
+  echo -e ""
+  west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $5
+  cp build_cmake/${exec_name} ${exec_flash_debug_armgcc}
+  rm -rf build_cmake
+  echo -e ""
+  echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $6"
+  echo -e ""
+  west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $6
+  cp build_cmake/${exec_name} ${exec_flash_release_armgcc}
+  rm -rf build_cmake
+fi
+
 echo -e ""
 echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $3"
 echo -e ""
@@ -77,15 +81,18 @@ echo -e ""
 west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $4
 cp build_cmake/${exec_name} ${exec_release_iar}
 rm -rf build_cmake
-echo -e ""
-echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $5"
-echo -e ""
-west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $5
-cp build_cmake/${exec_name} ${exec_flash_debug_iar}
-rm -rf build_cmake
-echo -e ""
-echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $6"
-echo -e ""
-west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $6
-cp build_cmake/${exec_name} ${exec_flash_release_iar}
-rm -rf build_cmake
+
+if [ "$2" != "cube_freertos" ]; then
+  echo -e ""
+  echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $5"
+  echo -e ""
+  west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $5
+  cp build_cmake/${exec_name} ${exec_flash_debug_iar}
+  rm -rf build_cmake
+  echo -e ""
+  echo -e "Running command: west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $6"
+  echo -e ""
+  west build -b $7 $1 ${core} --build-dir=build_cmake --toolchain iar --config $6
+  cp build_cmake/${exec_name} ${exec_flash_release_iar}
+  rm -rf build_cmake
+fi

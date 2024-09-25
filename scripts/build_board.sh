@@ -41,3 +41,4 @@ fi
 ./build_script.sh  examples/src/vglite_examples/tiger_freertos tiger_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core}
 ./build_script.sh  examples/src/vglite_examples/vector_freertos vector_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core}
 ./build_script.sh  examples/src/vglite_examples/tiled_freertos tiled_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core}
+./build_script.sh  examples/src/vglite_examples/cube_freertos cube_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core}
