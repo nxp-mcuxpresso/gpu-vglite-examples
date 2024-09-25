@@ -21,7 +21,10 @@
 
 #include "fsl_gpio.h"
 #include "display_support.h"
+
+#if defined(CPU_MIMXRT798SGFOA_cm33_core0)
 #include "fsl_lcdif.h"
+#endif
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -60,7 +63,11 @@ volatile bool s_frameDone = false;
 #if (720 * 1280 == (DEMO_PANEL_WIDTH) * (DEMO_PANEL_HEIGHT))
 #define TW 720
 /* On RT595S */
-#if defined(CPU_MIMXRT595SFFOC_cm33) || defined(CPU_MIMXRT798SGFOA_cm33_core0)
+#if defined(CPU_MIMXRT595SFFOC_cm33)
+/* Tessellation window = 720 x 128 */
+#define TH 128
+/* On RT798S */
+#elif defined(CPU_MIMXRT798SGFOA_cm33_core0)
 /* Tessellation window = 720 x 640 */
 #define TH 640
 /* On RT1170 */
@@ -74,7 +81,7 @@ volatile bool s_frameDone = false;
 #elif (400 * 400 == (DEMO_PANEL_WIDTH) * (DEMO_PANEL_HEIGHT))
 /* Tessellation window = 400 x 400 */
 #define TW 400
-#define TH 400
+#define TH 256
 #else
 /* Tessellation window = 256 x 256 */
 #define TW 256
