@@ -3,13 +3,15 @@ middleware.vglite:
   section-type: component
   meta-name: middleware.vglite
   contents:
-    repo_base_path: middleware/vglite
+    repo_base_path: middleware/vglite/driver
     project_base_path: vglite
     cc-include:
     - repo_relative_path: inc
     - repo_relative_path: VGLite
     - repo_relative_path: VGLite/rtos
     - repo_relative_path: VGLite/Series/gc555/0x423_ECO
+    - repo_relative_path: VGLite/Series/gc355/0x0_1216
+    - repo_relative_path: VGLite/Series/gc255/0x40A
     - repo_relative_path: VGLiteKernel
     - repo_relative_path: VGLiteKernel/rtos
     files:
@@ -23,6 +25,8 @@ middleware.vglite:
     - source: VGLite/vg_lite_context.h
     - source: VGLite/rtos/vg_lite_os.c
     - source: VGLite/Series/gc555/0x423_ECO/vg_lite_options.h
+    - source: VGLite/Series/gc355/0x0_1216/vg_lite_options.h
+    - source: VGLite/Series/gc255/0x40A/vg_lite_options.h
     - source: VGLiteKernel/vg_lite_hal.h
     - source: VGLiteKernel/vg_lite_hw.h
     - source: VGLiteKernel/vg_lite_kernel.c
@@ -36,22 +40,156 @@ middleware.vglite:
     - source: LICENSE.txt
       hidden: true
       exclude: true
-    configuration:
-      cc-define:
-        VG_COMMAND_CALL: 1
-        VG_TARGET_FAST_CLEAR: 0
-        GCID_REV_CID: gc555/0x423_ECO
   belong_to: set.middleware.vglite
   section_info:
     description: vglite library
     type: middleware
-    version: 4.0.48
+    version: 4.0.90
     user_visible: never
     full_name: Middleware vglite
     taxonomy:
       csub: vglite
       belong_to: vglite
     display_name: vglite
+
+# middleware.vglite.vglite_window:
+#   section-type: component
+#   contents:
+#     repo_base_path: middleware/vglite/vglite_window
+#     project_base_path: vglite
+#     cc-include:
+#     - repo_relative_path: example/vglite_window
+#     files:
+#     - source: example/vglite_window/vglite_window.c
+#     - source: example/vglite_window/vglite_window.h
+#   belong_to: set.middleware.vglite
+#   section_info:
+#     description: vglite window
+#     type: other
+#     version: 4.0.90
+#     full_name: vglite window configuration
+#     user_visible: never
+#     taxonomy:
+#       belong_to: vglite
+#       csub: other
+#     display_name: vglite_window
+
+# middleware.vglite.clear_freertos:
+#   section-type: component
+#   contents:
+#     repo_base_path: middleware/vglite/examples/clear_freertos
+#     project_base_path: vglite
+#     cc-include:
+#     - repo_relative_path: example/clear_freertos
+#     files:
+#     - source: example/clear_freertos/clear_freertos.c
+#     - source: example/clear_freertos/clear_freertos.readme
+#   belong_to: set.middleware.vglite
+#   section_info:
+#     description: clear demo
+#     type: demo
+#     version: 4.0.90
+#     full_name: clear demo
+#     user_visible: never
+#     taxonomy:
+#       belong_to: vglite
+#       csub: demo
+#     display_name: clear_freertos
+
+# middleware.vglite.clock_freertos:
+#   section-type: component
+#   contents:
+#     repo_base_path: middleware/vglite/examples/clock_freertos
+#     project_base_path: vglite
+#     cc-include:
+#     - repo_relative_path: example/clock_freertos
+#     files:
+#     - source: example/clock_freertos/clock_freertos.c
+#     - source: example/clock_freertos/clock_analog.h
+#     - source: example/clock_freertos/hour_needle.h
+#     - source: example/clock_freertos/minute_needle.h
+#     - source: example/tiger_freertos/clock_freertos.readme
+#   belong_to: set.middleware.vglite
+#   section_info:
+#     description: clock demo
+#     type: demo
+#     version: 4.0.90
+#     full_name: clock demo
+#     user_visible: never
+#     taxonomy:
+#       belong_to: vglite
+#       csub: demo
+#     display_name: clock_freertos
+
+# middleware.vglite.tiger_freertos:
+#   section-type: component
+#   contents:
+#     repo_base_path: middleware/vglite/examples/tiger_freertos
+#     project_base_path: vglite
+#     cc-include:
+#     - repo_relative_path: example/tiger_freertos
+#     files:
+#     - source: example/tiger_freertos/tiger_freertos.c
+#     - source: example/tiger_freertos/tiger_paths.h
+#     - source: example/tiger_freertos/tiger_freertos.readme
+#   belong_to: set.middleware.vglite
+#   section_info:
+#     description: tiger demo
+#     type: demo
+#     version: 4.0.90
+#     full_name: tiger demo
+#     user_visible: never
+#     taxonomy:
+#       belong_to: vglite
+#       csub: demo
+#     display_name: tiger_freertos
+
+# middleware.vglite.tiled_freertos:
+#   section-type: component
+#   contents:
+#     repo_base_path: middleware/vglite/examples/tiled_freertos
+#     project_base_path: vglite
+#     cc-include:
+#     - repo_relative_path: example/tiled_freertos
+#     files:
+#     - source: example/tiled_freertos/tiled_freertos.c
+#     - source: example/tiled_freertos/tiled_paths.h
+#     - source: example/tiled_freertos/tiled_freertos.readme
+#   belong_to: set.middleware.vglite
+#   section_info:
+#     description: tiled demo
+#     type: demo
+#     version: 4.0.90
+#     full_name: tiled demo
+#     user_visible: never
+#     taxonomy:
+#       belong_to: vglite
+#       csub: demo
+#     display_name: tiled_freertos
+
+# middleware.vglite.vector_freertos:
+#   section-type: component
+#   contents:
+#     repo_base_path: middleware/vglite/examples/vector_freertos
+#     project_base_path: vglite
+#     cc-include:
+#     - repo_relative_path: example/vector_freertos
+#     files:
+#     - source: example/vector_freertos/vector_freertos.c
+#     - source: example/vector_freertos/vector_paths.h
+#     - source: example/vector_freertos/vector_freertos.readme
+#   belong_to: set.middleware.vglite
+#   section_info:
+#     description: vector graphics demo
+#     type: demo
+#     version: 4.0.90
+#     full_name: vector demo
+#     user_visible: never
+#     taxonomy:
+#       belong_to: vglite
+#       csub: demo
+#     display_name: vector_freertos
+
 set.middleware.vglite:
   section-type: set
   belong_to: set.middleware.vglite
@@ -61,7 +199,7 @@ set.middleware.vglite:
     display_name: vglite
     description: vglite lib
     set_location:
-      repo_base_path: middleware/vglite
+      repo_base_path: middleware/vglite/driver
     type: middleware
     vendor: NXP
     product:
@@ -87,9 +225,15 @@ set.middleware.vglite:
     - anyOf:
       - device:
         - MIMXRT798S
+        - MIMXRT1176
+        - MIMXRT1166
+        - MIMXRT595S
       - board:
-        - fpga_rt700
         - mimxrt700evk
+        - evkmimxrt1170
+        - evkbmimxrt1170
+        - evkmimxrt1160
+        - evkmimxrt595
 license.vglite:
   section-type: license
   belong_to: set.middleware.vglite
@@ -106,7 +250,7 @@ scr.middleware.vglite:
     license:
     - license.vglite
     Name: vglite
-    Version: 4.0.48
+    Version: 4.0.90
     Format: source code
     Description: VeriSilicon's platform independent VGLite Graphics library
     Location: middleware/vglite
