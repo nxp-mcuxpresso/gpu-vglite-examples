@@ -1,0 +1,71 @@
+# test the first 60 frames of a SDK example
+b vg_lite_finish
+target remote :2331
+set pagination off
+mon reset
+mon halt
+loa
+mon reset 2
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+set confirm off
+q
