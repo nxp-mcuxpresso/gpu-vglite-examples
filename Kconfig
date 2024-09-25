@@ -1,0 +1,5 @@
+
+menu "vglite_sdk"
+    config MCUX_COMPONENT_middleware.vglite
+        bool "Component middleware.vglite"
+endmenu
