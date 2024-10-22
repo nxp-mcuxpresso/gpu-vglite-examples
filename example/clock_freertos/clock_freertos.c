@@ -5,7 +5,29 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+
+/* FreeRTOS kernel includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+
+#include "fsl_debug_console.h"
+#include "pin_mux.h"
+#include "board.h"
+
 #include "layer.h"
+#include "clock_analog.h"
+#include "hour_needle.h"
+#include "minute_needle.h"
+#include "fsl_soc_src.h"
+
+
+/*******************************************************************************
+ * Defines
+ ******************************************************************************/
+#define MAX_UI_LAYERS (3)
+#define ANALAOG_DIAL (0)
+#define HOUR_NIDDLE (1)
+#define MINUTE_NIDDLE (2)
 
 /*******************************************************************************
  * Prototypes
@@ -18,18 +40,17 @@ static void vglite_task(void *pvParameters);
 static vg_lite_display_t display;
 static vg_lite_window_t window;
 
+static UILayers_t g_layers[MAX_UI_LAYERS] =
+{
+    UI_LAYER_DATA(ClockAnalogOrange),
+    UI_LAYER_DATA(HourNeedle),
+    UI_LAYER_DATA(MinuteNeedle)
+};
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
-
-UILayers_t g_layers[MAX_UI_LAYERS] =
-{
-	{&ClockAnalogOrange, NULL, NULL, &ClockAnalogOrange_gradient_info, ClockAnalogOrange_color_data},
-	{&HourNeedle, NULL, NULL, &HourNeedle_gradient_info, HourNeedle_color_data},
-	{&MinuteNeedle, NULL, NULL, &MinuteNeedle_gradient_info, MinuteNeedle_color_data}
-};
-
-static void BOARD_ResetDisplayMix(void)
+void BOARD_ResetDisplayMix(void)
 {
     /*
      * Reset the displaymix, otherwise during debugging, the
@@ -41,7 +62,6 @@ static void BOARD_ResetDisplayMix(void)
     {
     }
 }
-
 
 int main(void)
 {
@@ -109,37 +129,49 @@ uint32_t getTime()
 }
 
 void init() {
+    int ret = 0;
     for (int i = 0; i < MAX_UI_LAYERS; i++) {
-        init_layer(&g_layers[i]);
+        ret = layer_init(&g_layers[i]);
+        if (ret != VG_LITE_SUCCESS) {
+            PRINTF("\r\nERROR: layer_init failed for %s\r\n",g_layers[i].path->image_name);
+        }
     }
 }
 
 void draw_hour_niddle(vg_lite_buffer_t *rt, float angle) {
-    for (int j = 0; j < g_layers[HOUR_NIDDLE].path->path_count; j++) {
-        memcpy(&g_layers[HOUR_NIDDLE].matrix[j].m, &g_layers[HOUR_NIDDLE].path->transform[j * (sizeof(g_layers[HOUR_NIDDLE].matrix[j].m) / sizeof(float))], sizeof(g_layers[HOUR_NIDDLE].matrix[j].m));
-		vg_lite_translate(200, 200, &g_layers[HOUR_NIDDLE].matrix[j]);
-		vg_lite_rotate(angle, &g_layers[HOUR_NIDDLE].matrix[j]);
-		redraw_layer(rt, &g_layers[HOUR_NIDDLE], &g_layers[HOUR_NIDDLE].matrix[j]);
-    }
+
+    vg_lite_matrix_t m;
+    vg_lite_identity(&m);
+    vg_lite_translate(200, 200, &m);
+    vg_lite_rotate(angle, &m);
+
+    layer_draw(rt, &g_layers[HOUR_NIDDLE], &m);
+
 }
 
 void draw_minute_niddle(vg_lite_buffer_t *rt, float angle) {
-    for (int j = 0; j < g_layers[MINUTE_NIDDLE].path->path_count; j++) {
-      	memcpy(g_layers[MINUTE_NIDDLE].matrix[j].m, &g_layers[MINUTE_NIDDLE].path->transform[j * (sizeof(g_layers[MINUTE_NIDDLE].matrix[j].m) / sizeof(float))], sizeof(g_layers[MINUTE_NIDDLE].matrix[j].m));
-		vg_lite_translate(200, 200, &g_layers[MINUTE_NIDDLE].matrix[j]);
-		vg_lite_rotate(angle, &g_layers[MINUTE_NIDDLE].matrix[j]);
-		redraw_layer(rt, &g_layers[MINUTE_NIDDLE], &g_layers[MINUTE_NIDDLE].matrix[j]);
-    }
+
+    vg_lite_matrix_t m;
+    vg_lite_identity(&m);
+    vg_lite_translate(200, 200, &m);
+    vg_lite_rotate(angle, &m);
+
+    layer_draw(rt, &g_layers[MINUTE_NIDDLE], &m);
+}
+
+void draw_analog_dial(vg_lite_buffer_t *rt) {
+
+    vg_lite_matrix_t m;
+    vg_lite_identity(&m);
+    layer_draw(rt, &g_layers[ANALAOG_DIAL], &m);
 }
 
 void redraw(vg_lite_buffer_t *rt) {
 	static float angle = 0;
-	for (int j = 0; j < g_layers[ANALAOG_DIAL].path->path_count; j++) {
-		memcpy(&g_layers[ANALAOG_DIAL].matrix[j].m, &g_layers[ANALAOG_DIAL].path->transform[j * (sizeof(g_layers[ANALAOG_DIAL].matrix[j].m) / sizeof(float))], sizeof(g_layers[ANALAOG_DIAL].matrix[j].m));
-		redraw_layer(rt, &g_layers[ANALAOG_DIAL], &g_layers[ANALAOG_DIAL].matrix[j]);
-		draw_hour_niddle(rt, angle);
-		draw_minute_niddle(rt, angle);
-	}
+
+    draw_analog_dial(rt);
+    draw_hour_niddle(rt, angle);
+    draw_minute_niddle(rt, angle);
 	angle += 0.5;
 }
 
