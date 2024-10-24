@@ -73,6 +73,7 @@ typedef struct radialGradient {
 typedef enum fill_mode {
     STROKE,
     FILL_CONSTANT,
+    FILL_LINEAR_GRAD,
     NO_FILL_MODE
 } fill_mode_t;
 
@@ -87,6 +88,32 @@ typedef struct gradient_mode {
     hybridPath_t *hybridPath;
     vg_lite_fill_t *fillRule;
 }gradient_mode_t;
+
+#define MAX_GRADIENT_CACHE (8)        /* Maximum number of gradient paths that can be rendered */
+#define MAX_GRADIENT_STOP_POINTS (4)  /* Maximum number of stop points allowed per gradient */
+
+typedef enum GradientCacheEntry {
+	eInvalidCacheEntry = 0,
+	eLinearGradientCacheEntry,
+	eRadialGradientCacheEntry,
+} GradientCacheEntry_t;
+
+typedef struct gradient_cache_entry {
+    void *g;
+    GradientCacheEntry_t type;
+    union {
+        struct {
+            vg_lite_linear_gradient_ext_t lGradient;
+            vg_lite_linear_gradient_parameter_t polygonLinearGradient;
+        } lg;
+        struct {
+            vg_lite_radial_gradient_t rGradient;
+            vg_lite_radial_gradient_parameter_t polygonRadialGradient;
+        } rg;
+    } grad_data;
+    /* Shared color ramp for both gradients */
+    vg_lite_color_ramp_t vgColorRamp[MAX_GRADIENT_STOP_POINTS];
+} gradient_cache_entry_t;
 
 typedef struct {
 	  image_info_t *path;
@@ -142,6 +169,43 @@ int layer_init(UILayers_t *layer);
  * \retcode VG_LITE_INVALID_ARGUMENT - if any arguments are invalid
  * \retcode -1 - For any other errror
  */
-int free_layer(UILayers_t *layer);
+int layer_free(UILayers_t *layer);
 
+/**
+ * gradient_cache_init()
+ *
+ * This API initializes internal gradient cache to reuse repeated gradients
+ *
+ * Cache memory utilization can be configured using MAX_GRADIENT_CACHE  and MAX_GRADIENT_STOP_POINTS
+ * MAX_GRADIENT_CACHE defaults to 8
+ * MAX_GRADIENT_STOP_POINTS defaults to 4
+ *
+ * \retcode VG_LITE_SUCCESS - on successful rendering
+ * \retcode VG_LITE_OUT_OF_MEMORY - if there is insufficient memory
+ */
+int gradient_cache_init(void);
+
+/**
+ * gradient_cache_init()
+ *
+ * This API frees cached gradient entries
+ *
+ */
+void gradient_cache_free(void);
+
+/**
+ * gradient_cache_find()
+ *
+ * This API lookups gradient cache for requested gradient. If gradient is found
+ * it tries to find an unused entry. Initializes requested gradient and returns to application.
+ * In case of error it sends appropriate error code.
+ *
+ * grad [in] - Pointer to requested gradient pointer
+ * type [in] - Type of requested gradient (Linear/Radial)
+ * ppcachedEntry [out] - Pointer will be not-NULL in case of success
+ *
+ * \retcode VG_LITE_SUCCESS - in case of success
+ * \retcode VG_LITE_OUT_OF_MEMORY - if gradient allocation fails.
+ */
+int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedEntry);
 

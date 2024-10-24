@@ -130,11 +130,19 @@ uint32_t getTime()
 
 void init() {
     int ret = 0;
+    vg_lite_error_t error;
     for (int i = 0; i < MAX_UI_LAYERS; i++) {
         ret = layer_init(&g_layers[i]);
         if (ret != VG_LITE_SUCCESS) {
             PRINTF("\r\nERROR: layer_init failed for %s\r\n",g_layers[i].path->image_name);
         }
+    }
+    error = gradient_cache_init();
+    if (error != 0)
+    {
+        PRINTF("init_cached_gradient failed: error %d\r\n", error);
+        while (1)
+            ;
     }
 }
 
@@ -198,9 +206,10 @@ static void vglite_task(void *pvParameters)
     }
 
     init();
+
     uint32_t startTime, time, n = 0;
 	startTime = getTime();
-	while (1)
+	while(1)
 	{
 		vg_lite_buffer_t *rt = VGLITE_GetRenderTarget(&window);
 		if (rt == NULL)
@@ -227,4 +236,5 @@ static void vglite_task(void *pvParameters)
 	for (int i = 0; i < MAX_UI_LAYERS; i++) {
 		free_layer(&g_layers[i]);
 	}
+	gradient_cache_free();
 }
