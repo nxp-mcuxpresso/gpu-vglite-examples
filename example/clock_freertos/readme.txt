@@ -19,3 +19,8 @@
     UI_LAYER_DATA(MinuteNeedle),
   with
     UI_LAYER_DATA(MinuteNeedleStroke),
+
+NOTE:
+  generate_assets.sh is a helper script which will let you generate header.
+  You will need to set TOOLKIT_PATH and OUTPUT_PATH correctly in generate_assets.sh properly.
+
