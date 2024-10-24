@@ -74,6 +74,7 @@ typedef enum fill_mode {
     STROKE,
     FILL_CONSTANT,
     FILL_LINEAR_GRAD,
+    FILL_RADIAL_GRAD,
     NO_FILL_MODE
 } fill_mode_t;
 

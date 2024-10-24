@@ -65,7 +65,9 @@ void gradient_cache_free(void)
             if (g_grad_cache[i].g != NULL) {
                 if (g_grad_cache[i].type == eLinearGradientCacheEntry) {
                     vg_lite_clear_linear_grad(&g_grad_cache[i].grad_data.lg.lGradient);
-                }
+                } else if (g_grad_cache[i].type == eRadialGradientCacheEntry) {
+                    vg_lite_clear_radial_grad(&g_grad_cache[i].grad_data.rg.rGradient);
+		}
             }
         }
         vg_lite_os_free(g_grad_cache);
@@ -99,7 +101,7 @@ int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedE
     if (grad == NULL)
         return VG_LITE_INVALID_ARGUMENT;
 
-    if (! (type == eLinearGradientCacheEntry))
+    if (! (type == eLinearGradientCacheEntry || type == eRadialGradientCacheEntry))
         return VG_LITE_INVALID_ARGUMENT;
 
     /* Check if path object for given gradient exists */
@@ -128,6 +130,8 @@ int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedE
 	/* Release memory of last gradient */
 	if(cachedGradient->type == eLinearGradientCacheEntry){
 		vg_lite_clear_linear_grad(&cachedGradient->grad_data.lg.lGradient);
+	} else if(cachedGradient->type == eRadialGradientCacheEntry){
+		vg_lite_clear_radial_grad(&cachedGradient->grad_data.rg.rGradient);
 	}
 
 	/* Allocate and cache requested gradient descriptor */
@@ -150,6 +154,25 @@ int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedE
 			return error;
 		error = vg_lite_update_linear_grad(&cachedGradient->grad_data.lg.lGradient);
 
+	} else if(type == eRadialGradientCacheEntry){
+		radialGradient_t *gradient = (radialGradient_t *)grad;
+
+		_gradient_stop_color_to_vglite_color(
+				gradient->num_stop_points,
+				gradient->stops,
+				cachedGradient->vgColorRamp);
+
+		cachedGradient->grad_data.rg.rGradient.count = gradient->num_stop_points;
+		cachedGradient->grad_data.rg.polygonRadialGradient = gradient->radial_gradient;
+
+		error = vg_lite_set_radial_grad(&cachedGradient->grad_data.rg.rGradient,
+				cachedGradient->grad_data.rg.rGradient.count,
+				cachedGradient->vgColorRamp,
+				cachedGradient->grad_data.rg.polygonRadialGradient,
+				VG_LITE_GRADIENT_SPREAD_PAD, 1);
+		if (error != VG_LITE_SUCCESS)
+			return error;
+		error = vg_lite_update_rad_grad(&cachedGradient->grad_data.rg.rGradient);
 	}
 
 	if (error != VG_LITE_SUCCESS)
