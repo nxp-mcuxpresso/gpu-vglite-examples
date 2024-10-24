@@ -22,6 +22,24 @@ static gradient_cache_entry_t *g_grad_cache = NULL;
 void* vg_lite_os_malloc(uint32_t size);
 void vg_lite_os_free(void *memory);
 
+#ifndef TRANSPARENT_VGLITE_COLOUR
+/* VGLITE Internal color format is ABGR */
+#define TRANSPARENT_VGLITE_COLOUR(a, r, g, b) \
+	((uint32_t)(a) << 24) | ((uint32_t)(b) << 16) | ((uint32_t)(g) << 8) | \
+	(uint32_t)r
+#endif
+
+static uint32_t ARGB_2_VGLITE_COLOR(uint32_t x)
+{
+	uint32_t r, g, b, a;
+	a = ((x & 0xFF000000)>>24);
+	r = ((x & 0x00FF0000)>>16);
+	g = ((x & 0x0000FF00)>>8);
+	b = ((x & 0x000000FF));
+
+	return TRANSPARENT_VGLITE_COLOUR(a, r, g, b);
+}
+
 //NOTE: This API(multiply) is from vg_lite_matrix.c
 static void multiply(vg_lite_matrix_t * matrix, vg_lite_matrix_t * mult)
 {
@@ -209,7 +227,11 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		switch (layer->mode->hybridPath[2 * i].fillType) {
 		case STROKE:
 		case FILL_CONSTANT:
-			error = vg_lite_draw(rt, &layer->handle[i], layer->mode->fillRule[i], transform_matrix, VG_LITE_BLEND_NONE, layer->color[i]);
+			error = vg_lite_draw(rt, &layer->handle[i],
+					layer->mode->fillRule[i],
+					transform_matrix,
+					VG_LITE_BLEND_NONE,
+					ARGB_2_VGLITE_COLOR(layer->color[i]));
 			if (error) {
 				PRINTF("Error: vg_lite_draw() returned error %d\r\n", error);
 				return error;
@@ -306,7 +328,7 @@ int layer_init(UILayers_t *layer)
                     stroke_info->dashPattern,
                     stroke_info->dashPatternCnt,
                     stroke_info->dashPhase,
-                    stroke_info->strokeColor);
+                    ARGB_2_VGLITE_COLOR(stroke_info->strokeColor));
 
             if (vg_err != VG_LITE_SUCCESS) {
                 PRINTF("\r\nERROR: %d Failed to initialize graphic artifacts!\r\n\r\n", __LINE__);
