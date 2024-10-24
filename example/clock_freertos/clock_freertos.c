@@ -171,7 +171,7 @@ void redraw(vg_lite_buffer_t *rt) {
 
     draw_analog_dial(rt);
     draw_hour_niddle(rt, angle);
-    draw_minute_niddle(rt, angle);
+    draw_minute_niddle(rt, -angle);
 	angle += 0.5;
 }
 
