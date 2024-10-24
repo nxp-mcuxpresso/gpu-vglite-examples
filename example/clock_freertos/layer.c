@@ -287,6 +287,38 @@ int layer_init(UILayers_t *layer)
 		    return vg_err;
 	    }
         layer->handle[i].add_end = layer->path->paths_info[i].end_path_flag;
+
+        if(layer->mode->hybridPath[2*i].pathType == VG_LITE_DRAW_STROKE_PATH ||
+                layer->mode->hybridPath[2*i].pathType == VG_LITE_DRAW_FILL_STROKE_PATH)
+        {
+            stroke_info_t *stroke_info = &layer->path->stroke_info[i];
+            vg_err = vg_lite_set_stroke(&layer->handle[i],
+                    stroke_info->linecap,
+                    stroke_info->linejoin,
+                    stroke_info->strokeWidth,
+                    stroke_info->miterlimit,
+                    stroke_info->dashPattern,
+                    stroke_info->dashPatternCnt,
+                    stroke_info->dashPhase,
+                    stroke_info->strokeColor);
+
+            if (vg_err != VG_LITE_SUCCESS) {
+                PRINTF("\r\nERROR: %d Failed to initialize graphic artifacts!\r\n\r\n", __LINE__);
+                return vg_err;
+            }
+
+            vg_err = vg_lite_set_path_type(&layer->handle[i], VG_LITE_DRAW_STROKE_PATH);
+            if (vg_err != VG_LITE_SUCCESS) {
+                PRINTF("\r\nERROR: Invalid path type!\r\n\r\n");
+                return vg_err;
+            }
+
+            vg_err = vg_lite_update_stroke(&layer->handle[i]);
+            if (vg_err != VG_LITE_SUCCESS) {
+                PRINTF("\r\nERROR: %d Failed to initialize graphic artifacts!\r\n\r\n", __LINE__);
+                return vg_err;
+            }
+        }
 	}
 
 	return VG_LITE_SUCCESS;
