@@ -105,19 +105,19 @@ typedef struct gradient_cache_entry {
     union {
         struct {
             vg_lite_linear_gradient_ext_t lGradient;
-            vg_lite_linear_gradient_parameter_t polygonLinearGradient;
+            vg_lite_linear_gradient_parameter_t params;
         } lg;
         struct {
             vg_lite_radial_gradient_t rGradient;
-            vg_lite_radial_gradient_parameter_t polygonRadialGradient;
+            vg_lite_radial_gradient_parameter_t params;
         } rg;
     } grad_data;
     /* Shared color ramp for both gradients */
     vg_lite_color_ramp_t vgColorRamp[MAX_GRADIENT_STOP_POINTS];
 } gradient_cache_entry_t;
 
-typedef struct {
-	  image_info_t *path;
+typedef struct UILayers {
+	  image_info_t *img_info;
       vg_lite_path_t *handle;
       vg_lite_matrix_t *matrix;
       gradient_mode_t *mode;

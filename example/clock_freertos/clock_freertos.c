@@ -134,7 +134,7 @@ void init() {
     for (int i = 0; i < MAX_UI_LAYERS; i++) {
         ret = layer_init(&g_layers[i]);
         if (ret != VG_LITE_SUCCESS) {
-            PRINTF("\r\nERROR: layer_init failed for %s\r\n",g_layers[i].path->image_name);
+            PRINTF("\r\nERROR: layer_init failed for %s\r\n",g_layers[i].img_info->image_name);
         }
     }
     error = gradient_cache_init();

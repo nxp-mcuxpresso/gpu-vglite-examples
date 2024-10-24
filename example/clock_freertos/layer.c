@@ -144,11 +144,11 @@ int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedE
 				cachedGradient->vgColorRamp);
 
 		cachedGradient->grad_data.lg.lGradient.count = gradient->num_stop_points;
-		cachedGradient->grad_data.lg.polygonLinearGradient = gradient->linear_gradient;
+		cachedGradient->grad_data.lg.params = gradient->linear_gradient;
 		error = vg_lite_set_linear_grad(&cachedGradient->grad_data.lg.lGradient,
 				cachedGradient->grad_data.lg.lGradient.count,
 				cachedGradient->vgColorRamp,
-				cachedGradient->grad_data.lg.polygonLinearGradient,
+				cachedGradient->grad_data.lg.params,
 				VG_LITE_GRADIENT_SPREAD_PAD, 1);
 		if (error != VG_LITE_SUCCESS)
 			return error;
@@ -163,12 +163,12 @@ int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedE
 				cachedGradient->vgColorRamp);
 
 		cachedGradient->grad_data.rg.rGradient.count = gradient->num_stop_points;
-		cachedGradient->grad_data.rg.polygonRadialGradient = gradient->radial_gradient;
+		cachedGradient->grad_data.rg.params = gradient->radial_gradient;
 
 		error = vg_lite_set_radial_grad(&cachedGradient->grad_data.rg.rGradient,
 				cachedGradient->grad_data.rg.rGradient.count,
 				cachedGradient->vgColorRamp,
-				cachedGradient->grad_data.rg.polygonRadialGradient,
+				cachedGradient->grad_data.rg.params,
 				VG_LITE_GRADIENT_SPREAD_PAD, 1);
 		if (error != VG_LITE_SUCCESS)
 			return error;
@@ -198,11 +198,11 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
     if (rt == NULL || layer == NULL || transform_matrix == NULL)
         return VG_LITE_INVALID_ARGUMENT;
 
-    for (int i = 0; i < layer->path->path_count; i++) {
+    for (int i = 0; i < layer->img_info->path_count; i++) {
 		vg_lite_matrix_t *tmatrix = (vg_lite_matrix_t *)&layer->matrix[i].m;
 
 		memcpy(tmatrix,
-			&layer->path->transform[i * matrix_size_in_float],
+			&layer->img_info->transform[i * matrix_size_in_float],
 			matrix_size);
 
 		multiply(tmatrix, transform_matrix);
@@ -267,31 +267,37 @@ int layer_init(UILayers_t *layer)
     if (layer == NULL)
         return VG_LITE_INVALID_ARGUMENT;
 
-    layer->handle  = (vg_lite_path_t *)vg_lite_os_malloc(layer->path->path_count * sizeof(vg_lite_path_t));
+    layer->handle  = (vg_lite_path_t *)vg_lite_os_malloc(layer->img_info->path_count * sizeof(vg_lite_path_t));
     if (layer->handle == NULL) {
 		PRINTF("\r\nERROR: Memory allocation failed for path!\r\n\r\n");
 		return VG_LITE_OUT_OF_MEMORY;
 	}
-    memset(layer->handle, 0 , layer->path->path_count * sizeof(vg_lite_path_t));
-    layer->matrix  = (vg_lite_matrix_t *)vg_lite_os_malloc(layer->path->path_count * sizeof(vg_lite_matrix_t));
+    memset(layer->handle, 0 , layer->img_info->path_count * sizeof(vg_lite_path_t));
+    layer->matrix  = (vg_lite_matrix_t *)vg_lite_os_malloc(layer->img_info->path_count * sizeof(vg_lite_matrix_t));
     if (layer->matrix == NULL) {
 		PRINTF("\r\nERROR: Memory allocation failed for matrix!\r\n\r\n");
 		return VG_LITE_OUT_OF_MEMORY;
 	}
-    for (i = 0; i < layer->path->path_count; i++) {
-        vg_err = vg_lite_init_path(&layer->handle[i], layer->path->data_format, VG_LITE_MEDIUM,
-        		layer->path->paths_info[i].path_length, layer->path->paths_info[i].path_data,
-            0, 0, layer->path->image_size[0], layer->path->image_size[1]);
+    for (i = 0; i < layer->img_info->path_count; i++) {
+        path_info_t *path_info = &layer->img_info->paths_info[i];
+        vg_err = vg_lite_init_path(&layer->handle[i],
+                    layer->img_info->data_format,
+                    VG_LITE_MEDIUM,
+                    path_info->path_length,
+                    path_info->path_data,
+                    0, 0,
+                    layer->img_info->image_size[0],
+                    layer->img_info->image_size[1]);
         if (vg_err != VG_LITE_SUCCESS) {
 		    PRINTF("\r\nERROR: Failed to initialize graphic artifacts!\r\n\r\n");
 		    return vg_err;
 	    }
-        layer->handle[i].add_end = layer->path->paths_info[i].end_path_flag;
+        layer->handle[i].add_end = path_info->end_path_flag;
 
         if(layer->mode->hybridPath[2*i].pathType == VG_LITE_DRAW_STROKE_PATH ||
                 layer->mode->hybridPath[2*i].pathType == VG_LITE_DRAW_FILL_STROKE_PATH)
         {
-            stroke_info_t *stroke_info = &layer->path->stroke_info[i];
+            stroke_info_t *stroke_info = &layer->img_info->stroke_info[i];
             vg_err = vg_lite_set_stroke(&layer->handle[i],
                     stroke_info->linecap,
                     stroke_info->linejoin,
