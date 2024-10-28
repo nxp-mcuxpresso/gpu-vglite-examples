@@ -60,20 +60,20 @@ if [ "$9" = "all" ] || [ "$9" = "mdk" ]; then
 fi
 
 if [ "$9" = "all" ] || [ "$9" = "armgcc" ]; then
-  # cube_freertos only builds on iar debug and iar release targets
+  echo -e ""
+  echo -e "Running command: west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3"
+  echo -e ""
+  west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3
+  cp build_cmake/${exec_name} ${exec_debug_armgcc}
+  rm -rf build_cmake
+  echo -e ""
+  echo -e "Running command: west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4"
+  echo -e ""
+  west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4
+  cp build_cmake/${exec_name} ${exec_release_armgcc}
+  rm -rf build_cmake
+
   if [ "$2" != "cube_freertos" ]; then
-    echo -e ""
-    echo -e "Running command: west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3"
-    echo -e ""
-    west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3
-    cp build_cmake/${exec_name} ${exec_debug_armgcc}
-    rm -rf build_cmake
-    echo -e ""
-    echo -e "Running command: west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4"
-    echo -e ""
-    west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $4
-    cp build_cmake/${exec_name} ${exec_release_armgcc}
-    rm -rf build_cmake
     echo -e ""
     echo -e "Running command: west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $5"
     echo -e ""

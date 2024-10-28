@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script builds tiger_freertos, vector_freertos and tiled_freertos applications for a certain board
+# This script builds tiger_freertos, cube_freertos, vector_freertos and tiled_freertos applications for a certain board
 
 set -e
 
@@ -25,7 +25,7 @@ if [ "$1" = "evkmimxrt595" ]; then
     rel="release"
     flash_deb="flash_debug"
     flash_rel="flash_release"
-elif [ "$1" = "evkmimxrt1170" ] || [ "$1" = "evkmimxrt1160" ] || [ "$1" = "evkbmimxrt1170" ]; then
+elif [ "$1" = "evkmimxrt1160" ] || [ "$1" = "evkbmimxrt1170" ]; then
     core="cm7"
     deb="sdram_debug"
     rel="sdram_release"
