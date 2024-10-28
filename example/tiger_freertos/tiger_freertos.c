@@ -13,6 +13,8 @@
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "board.h"
+#include "app.h"
+
 #include "vglite_support.h"
 #include "vglite_window.h"
 #include "tiger_paths.h"
