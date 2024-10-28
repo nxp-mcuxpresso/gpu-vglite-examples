@@ -7,10 +7,10 @@
 
 #include "draw_clock.h"
 
-#include "clock_paths/bg_paths.h"
-#include "clock_paths/h_paths.h"
-#include "clock_paths/m_paths.h"
-#include "clock_paths/s_paths.h"
+#include "bg_paths.h"
+#include "h_paths.h"
+#include "m_paths.h"
+#include "s_paths.h"
 
 /*******************************************************************************
  * Code
