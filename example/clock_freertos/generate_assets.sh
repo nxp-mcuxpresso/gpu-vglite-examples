@@ -12,47 +12,60 @@ function include_layer_h() {
 
 function transform_svg_to_header() {
    cd ${TOOLKIT_PATH}
-   ./gpu-vglite-toolkit.sh ${ASSET_PATH}/$1 ${OUTPUT_PATH}/$2
+   ./gpu-vglite-toolkit.sh $1 ${OUTPUT_PATH}/$2
 
    # Include layer.h in generated header file
    include_layer_h ${OUTPUT_PATH}/$2
+   cd -
 }
-
-echo Clock dial options
-echo 0. Dial with Orange color
-echo 1. Dial with linear grardient
-echo 2. Dial with Radial grardient
-echo 9. TO exit
-read -p "Select dial: [1-3]:" dial
-echo 
-
-echo Hour needle options
-echo 0. Needle with fixed color
-echo 9. TO exit
-read -p "Select needle: [0]:" hour 
-echo 
-
-echo Minute needle options
-echo 0. Needle with fixed color
-echo 1. Needle with stroke
-echo 9. TO exit
-read -p "Select needle: [1-2]:" minute
-echo 
 
 clock_dial_options=("ClockAnalogOrange.svg" "ClockAnalogLinear.svg" "ClockAnalogRadial.svg")
 hour_needle_options=("HourNeedle.svg")
 minute_needle_options=("MinuteNeedle.svg" "MinuteNeedleStroke.svg")
 
-CLOCK_DIAL_SVG=${clock_dial_options[$dial]}
-HOUR_DIAL_SVG=${hour_needle_options[$hour]}
-MINUTE_DIAL_SVG=${minute_needle_options[$minute]}
 
-echo ${dial} ${minute}
-echo Dial: ${CLOCK_DIAL_SVG}
-echo Hour: ${HOUR_DIAL_SVG}
-echo Minute: ${MINUTE_DIAL_SVG}
+function generarte_clock() {
+    CLOCK_DIAL_SVG=$1
+    HOUR_DIAL_SVG=$2
+    MINUTE_DIAL_SVG=$3
 
-transform_svg_to_header ${CLOCK_DIAL_SVG} clock_analog.h
-transform_svg_to_header ${HOUR_DIAL_SVG} hour_needle.h
-transform_svg_to_header ${MINUTE_DIAL_SVG} minute_needle.h
+    echo Dial: ${CLOCK_DIAL_SVG}
+    echo Hour: ${HOUR_DIAL_SVG}
+    echo Minute: ${MINUTE_DIAL_SVG}
+
+    # Remaing files to avoid modification in clock_freertos.c
+    cp -v ${ASSET_PATH}/${CLOCK_DIAL_SVG} ClockDial.svg
+    cp -v ${ASSET_PATH}/${MINUTE_DIAL_SVG} MinuteNeedle.svg
+
+    transform_svg_to_header ${ASSET_PATH}/${HOUR_DIAL_SVG} hour_needle.h
+    transform_svg_to_header ${PWD}/ClockDial.svg clock_analog.h
+    transform_svg_to_header ${PWD}/MinuteNeedle.svg minute_needle.h
+
+    rm -v ClockDial.svg
+    rm -v MinuteNeedle.svg
+}
+
+# Orange Dial, fixed hour needle, fixed minute needle
+function basic_clock() {
+    generarte_clock ${clock_dial_options[0]} ${hour_needle_options[0]} ${minute_needle_options[0]}
+}
+
+# Dial with Linear Graadient, fixed hour needle, stroked based minute needle
+function advanced_clock() {
+    generarte_clock ${clock_dial_options[1]} ${hour_needle_options[0]} ${minute_needle_options[1]}
+}
+
+function show_usage() {
+    echo To generate Basic clock
+    echo "$0 basic"
+    echo 
+
+    echo To generate Advanced clock
+    echo "$0 advanced"
+    echo 
+}
+
+[ "$1" = "" ] && show_usage $0
+[ "$1" = "basic" ] && basic_clock
+[ "$1" = "advanced" ] && advanced_clock
 

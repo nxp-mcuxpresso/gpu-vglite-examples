@@ -42,7 +42,7 @@ static vg_lite_window_t window;
 
 static UILayers_t g_layers[MAX_UI_LAYERS] =
 {
-    UI_LAYER_DATA(ClockAnalogOrange),
+    UI_LAYER_DATA(ClockDial),
     UI_LAYER_DATA(HourNeedle),
     UI_LAYER_DATA(MinuteNeedle)
 };
