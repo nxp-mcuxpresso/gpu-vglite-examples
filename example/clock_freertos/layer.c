@@ -64,6 +64,21 @@ static void multiply(vg_lite_matrix_t * matrix, vg_lite_matrix_t * mult)
 #endif /* VG_SW_BLIT_PRECISION_OPT */
 }
 
+static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
+{
+    int row, column;
+
+    for (row = 0; row < 3; row++) {
+        if (m1->m[row][0] != m2->m[row][0])
+            return 0;
+        if (m1->m[row][1] != m2->m[row][1])
+            return 0;
+        if (m1->m[row][2] != m2->m[row][2])
+            return 0;
+    }
+    return 1;
+}
+
 int gradient_cache_init(void)
 {
     g_grad_cache = (gradient_cache_entry_t *)vg_lite_os_malloc(MAX_GRADIENT_CACHE * sizeof(gradient_cache_entry_t));
@@ -106,7 +121,7 @@ void _gradient_stop_color_to_vglite_color(int32_t num_stop_points, stopValue_t *
 	}
 }
 
-int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedEntry)
+int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry)
 {
 	int unused_idx;
     int i;
@@ -170,8 +185,12 @@ int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedE
 				VG_LITE_GRADIENT_SPREAD_PAD, 1);
 		if (error != VG_LITE_SUCCESS)
 			return error;
-		error = vg_lite_update_linear_grad(&cachedGradient->grad_data.lg.lGradient);
 
+                if (is_matrix_identical(&cachedGradient->grad_data.lg.lGradient.matrix,
+                        transform_matrix) == 0) {
+                    cachedGradient->grad_data.lg.lGradient.matrix = *transform_matrix;
+                    error = vg_lite_update_linear_grad(&cachedGradient->grad_data.lg.lGradient);
+                }
 	} else if(type == eRadialGradientCacheEntry){
 		radialGradient_t *gradient = (radialGradient_t *)grad;
 
@@ -190,7 +209,12 @@ int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedE
 				VG_LITE_GRADIENT_SPREAD_PAD, 1);
 		if (error != VG_LITE_SUCCESS)
 			return error;
-		error = vg_lite_update_rad_grad(&cachedGradient->grad_data.rg.rGradient);
+
+                if (is_matrix_identical(&cachedGradient->grad_data.rg.rGradient.matrix,
+                        transform_matrix) == 0) {
+                    cachedGradient->grad_data.rg.rGradient.matrix = *transform_matrix;
+                    error = vg_lite_update_rad_grad(&cachedGradient->grad_data.rg.rGradient);
+                }
 	}
 
 	if (error != VG_LITE_SUCCESS)
@@ -240,10 +264,10 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		case FILL_LINEAR_GRAD:
 			error = gradient_cache_find(layer->mode->linearGrads[i],
 					eLinearGradientCacheEntry,
+					transform_matrix,
 					&cachedGradient);
 			if (error != VG_LITE_SUCCESS)
 				continue;
-			cachedGradient->grad_data.lg.lGradient.matrix = *transform_matrix;
 			if (cachedGradient == NULL) {
 				PRINTF("Error: Failed to get cached linear gradient. Please increase MAX_GRADIENT_CACHE.\n");
 				return VG_LITE_OUT_OF_MEMORY;
@@ -258,10 +282,10 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		case FILL_RADIAL_GRAD:
 			error = gradient_cache_find(layer->mode->radialGrads[i],
 					eRadialGradientCacheEntry,
+					transform_matrix,
 					&cachedGradient);
 			if (error != VG_LITE_SUCCESS)
 				return error;
-			cachedGradient->grad_data.rg.rGradient.matrix = *transform_matrix;
 			if (cachedGradient == NULL) {
 				PRINTF("Error: Failed to get cached radial gradient. Please increase MAX_GRADIENT_CACHE.\n");
 				return VG_LITE_OUT_OF_MEMORY;

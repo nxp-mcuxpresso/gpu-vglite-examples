@@ -203,10 +203,11 @@ void gradient_cache_free(void);
  *
  * grad [in] - Pointer to requested gradient pointer
  * type [in] - Type of requested gradient (Linear/Radial)
+ * transform_matrix [in] - tranform matrix that is used in current path
  * ppcachedEntry [out] - Pointer will be not-NULL in case of success
  *
  * \retcode VG_LITE_SUCCESS - in case of success
  * \retcode VG_LITE_OUT_OF_MEMORY - if gradient allocation fails.
  */
-int gradient_cache_find(void *grad, int type, gradient_cache_entry_t **ppcachedEntry);
+int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry);
 
