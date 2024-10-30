@@ -29,6 +29,7 @@ typedef union data_mnemonic {
 typedef struct path_info {
     uint32_t  path_length;
     int32_t  *path_data;
+    float bounding_box[4];
     uint8_t end_path_flag;
 } path_info_t;
 

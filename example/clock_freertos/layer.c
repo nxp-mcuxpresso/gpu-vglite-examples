@@ -331,9 +331,10 @@ int layer_init(UILayers_t *layer)
                     VG_LITE_MEDIUM,
                     path_info->path_length,
                     path_info->path_data,
-                    0, 0,
-                    layer->img_info->image_size[0],
-                    layer->img_info->image_size[1]);
+                    path_info->bounding_box[0],
+                    path_info->bounding_box[1],
+                    path_info->bounding_box[2],
+                    path_info->bounding_box[3]);
         if (vg_err != VG_LITE_SUCCESS) {
 		    PRINTF("\r\nERROR: Failed to initialize graphic artifacts!\r\n\r\n");
 		    return vg_err;
