@@ -36,28 +36,21 @@ static uint32_t ARGB_2_VGLITE_COLOR(uint32_t x)
 	return TRANSPARENT_VGLITE_COLOUR(a, r, g, b);
 }
 
-//NOTE: This API(multiply) is from vg_lite_matrix.c
-static void multiply(vg_lite_matrix_t * matrix, vg_lite_matrix_t * mult)
+/*  Perform 2D matrix multiplication */
+static void mat_mult(vg_lite_matrix_t *mR, vg_lite_float_t *mA, vg_lite_matrix_t *mB)
 {
-    vg_lite_matrix_t temp;
     int row, column;
 
     for (row = 0; row < 3; row++) {
-        /* Process all columns. */
         for (column = 0; column < 3; column++) {
-            /* Compute matrix entry. */
-            temp.m[row][column] =  (matrix->m[row][0] * mult->m[0][column])
-            + (matrix->m[row][1] * mult->m[1][column])
-            + (matrix->m[row][2] * mult->m[2][column]);
+            mR->m[row][column] =  (mA[row*3 + 0] * mB->m[0][column])
+            + (mA[row*3 + 1] * mB->m[1][column])
+            + (mA[row*3 + 2] * mB->m[2][column]);
         }
     }
-
-    /* Copy temporary matrix into result. */
-#if VG_SW_BLIT_PRECISION_OPT
-    memcpy(matrix, &temp, sizeof(vg_lite_float_t) * 9);
-#else
-    memcpy(matrix, &temp, sizeof(temp));
-#endif /* VG_SW_BLIT_PRECISION_OPT */
+    mR->scaleX  = mB->scaleX;
+    mR->scaleY  = mB->scaleY;
+    mR->angle   = mB->angle;
 }
 
 static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
@@ -152,7 +145,7 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
 		}
 	}
 	if (unused_idx == -1) {
-		return NULL;
+		return VG_LITE_OUT_OF_MEMORY;
 	}
 
 	cachedGradient = &g_grad_cache[unused_idx];
@@ -230,26 +223,23 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 	int type;
 
 	const int matrix_size = sizeof(vg_lite_matrix_t);
-	const int matrix_size_in_float = (sizeof(vg_lite_matrix_t) / sizeof(float));
+	/* matrix_size_in_float an array of 9 float values */
+	const int matrix_size_in_float = 9;
 	gradient_cache_entry_t *cachedGradient = NULL;
 
     if (rt == NULL || layer == NULL || transform_matrix == NULL)
         return VG_LITE_INVALID_ARGUMENT;
 
     for (int i = 0; i < layer->img_info->path_count; i++) {
-		vg_lite_matrix_t *tmatrix = (vg_lite_matrix_t *)&layer->matrix[i].m;
+		vg_lite_matrix_t tmatrix;
 
-		memcpy(tmatrix,
-			&layer->img_info->transform[i * matrix_size_in_float],
-			matrix_size);
-
-		multiply(tmatrix, transform_matrix);
+		mat_mult(&tmatrix, &layer->img_info->transform[i * matrix_size_in_float], transform_matrix);
 		switch (layer->mode->hybridPath[2 * i].fillType) {
 		case STROKE:
 		case FILL_CONSTANT:
 			error = vg_lite_draw(rt, &layer->handle[i],
 					layer->mode->fillRule[i],
-					transform_matrix,
+					&tmatrix,
 					VG_LITE_BLEND_NONE,
 					ARGB_2_VGLITE_COLOR(layer->color[i]));
 			if (error) {
@@ -260,7 +250,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		case FILL_LINEAR_GRAD:
 			error = gradient_cache_find(layer->mode->linearGrads[i],
 					eLinearGradientCacheEntry,
-					transform_matrix,
+					&tmatrix,
 					&cachedGradient);
 			if (error != VG_LITE_SUCCESS)
 				continue;
@@ -278,7 +268,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		case FILL_RADIAL_GRAD:
 			error = gradient_cache_find(layer->mode->radialGrads[i],
 					eRadialGradientCacheEntry,
-					transform_matrix,
+					&tmatrix,
 					&cachedGradient);
 			if (error != VG_LITE_SUCCESS)
 				return error;
