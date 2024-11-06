@@ -234,7 +234,7 @@ static void vglite_task(void *pvParameters)
 		}
 	}
 	for (int i = 0; i < MAX_UI_LAYERS; i++) {
-		free_layer(&g_layers[i]);
+		layer_free(&g_layers[i]);
 	}
 	gradient_cache_free();
 }
