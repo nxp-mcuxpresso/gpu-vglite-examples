@@ -1,24 +1,12 @@
-
-* How to generate new graphics assets ?
+* What is a general step to generate graphics assets from SVG file ?
   gpu-vglite-toolkit.sh ClockAnalogOrange.svg clock_analog.h
-  gpu-vglite-toolkit.sh HourNeedle.svg hour_needle.h
-  gpu-vglite-toolkit.sh MinuteNeedle.svg minute_needle.h
 
-* How to try clock dial with radial gradient
-  gpu-vglite-toolkit.sh ClockAnalogRadial.svg clock_analog.h
+* Quick steps to generate graphics assets ?
+  To generate a clock basic dial with fixed color hour needle and minute needle.
+  ./generate_assets.sh basic
 
-  Replace following in clock_freertos.c
-    UI_LAYER_DATA(ClockAnalogOrange),
-  with
-    UI_LAYER_DATA(ClockAnalogRadial),
-
-* How to try stroke in minute needle
-  gpu-vglite-toolkit.sh MinuteNeedleStroke.svg minute_needle.h
-
-  Replace following in clock_freertos.c
-    UI_LAYER_DATA(MinuteNeedle),
-  with
-    UI_LAYER_DATA(MinuteNeedleStroke),
+  To generate a clock with linear gradient based dial with fixed color hour needle and minute needle.
+  ./generate_assets.sh advanced
 
 NOTE:
   generate_assets.sh is a helper script which will let you generate header.
