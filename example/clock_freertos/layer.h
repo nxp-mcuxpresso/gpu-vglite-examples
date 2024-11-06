@@ -18,8 +18,6 @@
 #define STATIC_PATH_DEFINES_H
 
 #include "vg_lite.h"
-#include "vglite_support.h"
-#include "vglite_window.h"
 
 typedef union data_mnemonic {
     int32_t cmd;

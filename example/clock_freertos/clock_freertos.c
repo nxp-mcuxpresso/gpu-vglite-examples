@@ -18,8 +18,9 @@
 #include "clock_analog.h"
 #include "hour_needle.h"
 #include "minute_needle.h"
-#include "fsl_soc_src.h"
 
+#include "vglite_support.h"
+#include "vglite_window.h"
 
 /*******************************************************************************
  * Defines
