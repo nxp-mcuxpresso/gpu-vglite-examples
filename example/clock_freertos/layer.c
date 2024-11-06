@@ -18,10 +18,6 @@
 /* GLobals */
 static gradient_cache_entry_t *g_grad_cache = NULL;
 
-/* Prototypes */
-void* vg_lite_os_malloc(uint32_t size);
-void vg_lite_os_free(void *memory);
-
 #ifndef TRANSPARENT_VGLITE_COLOUR
 /* VGLITE Internal color format is ABGR */
 #define TRANSPARENT_VGLITE_COLOUR(a, r, g, b) \
@@ -81,7 +77,7 @@ static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
 
 int gradient_cache_init(void)
 {
-    g_grad_cache = (gradient_cache_entry_t *)vg_lite_os_malloc(MAX_GRADIENT_CACHE * sizeof(gradient_cache_entry_t));
+    g_grad_cache = (gradient_cache_entry_t*) pvPortMalloc(MAX_GRADIENT_CACHE * sizeof(gradient_cache_entry_t));
     if (g_grad_cache == NULL) {
         PRINTF("Error: Memory allocation failed for g_grad_cache!\n");
         return VG_LITE_OUT_OF_MEMORY;
@@ -103,7 +99,7 @@ void gradient_cache_free(void)
 		}
             }
         }
-        vg_lite_os_free(g_grad_cache);
+        vPortFree(g_grad_cache);
         g_grad_cache = NULL;
     }
 }
@@ -313,13 +309,13 @@ int layer_init(UILayers_t *layer)
     if (layer == NULL)
         return VG_LITE_INVALID_ARGUMENT;
 
-    layer->handle  = (vg_lite_path_t *)vg_lite_os_malloc(layer->img_info->path_count * sizeof(vg_lite_path_t));
+    layer->handle  = (vg_lite_path_t *)pvPortMalloc(layer->img_info->path_count * sizeof(vg_lite_path_t));
     if (layer->handle == NULL) {
 		PRINTF("\r\nERROR: Memory allocation failed for path!\r\n\r\n");
 		return VG_LITE_OUT_OF_MEMORY;
 	}
     memset(layer->handle, 0 , layer->img_info->path_count * sizeof(vg_lite_path_t));
-    layer->matrix  = (vg_lite_matrix_t *)vg_lite_os_malloc(layer->img_info->path_count * sizeof(vg_lite_matrix_t));
+    layer->matrix  = (vg_lite_matrix_t *)pvPortMalloc(layer->img_info->path_count * sizeof(vg_lite_matrix_t));
     if (layer->matrix == NULL) {
 		PRINTF("\r\nERROR: Memory allocation failed for matrix!\r\n\r\n");
 		return VG_LITE_OUT_OF_MEMORY;
@@ -383,11 +379,11 @@ int layer_free(UILayers_t *layer)
         return VG_LITE_INVALID_ARGUMENT;
 
     if (layer->handle) {
-        vg_lite_os_free(layer->handle);
+        vPortFree(layer->handle);
         layer->handle = NULL;
     }
     if (layer->matrix) {
-        vg_lite_os_free(layer->matrix);
+        vPortFree(layer->matrix);
         layer->matrix = NULL;
     }
 
