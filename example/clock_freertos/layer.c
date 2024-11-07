@@ -234,7 +234,17 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		vg_lite_matrix_t tmatrix;
 
 		mat_mult(&tmatrix, &layer->img_info->transform[i * matrix_size_in_float], transform_matrix);
-		switch (layer->mode->hybridPath[2 * i].fillType) {
+	  for (int k=0; k<2; k++) {
+		  if (NO_FILL_MODE == layer->mode->hybridPath[2 * i + k].fillType)
+			  continue;
+
+		error = vg_lite_set_path_type(&layer->handle[i], layer->mode->hybridPath[2 * i + k].pathType);
+		if (error != VG_LITE_SUCCESS) {
+			PRINTF("\r\nERROR: Invalid path type!\r\n\r\n");
+			return error;
+		}
+
+		switch (layer->mode->hybridPath[2 * i+k].fillType) {
 		case STROKE:
 		case FILL_CONSTANT:
 			error = vg_lite_draw(rt, &layer->handle[i],
@@ -286,6 +296,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		default:
 			return VG_LITE_INVALID_ARGUMENT;
 		}
+	  }
     }
     vg_lite_finish();
     return VG_LITE_SUCCESS;
@@ -327,8 +338,9 @@ int layer_init(UILayers_t *layer)
 	    }
         layer->handle[i].add_end = path_info->end_path_flag;
 
-        if(layer->mode->hybridPath[2*i].pathType == VG_LITE_DRAW_STROKE_PATH ||
-                layer->mode->hybridPath[2*i].pathType == VG_LITE_DRAW_FILL_STROKE_PATH)
+        for (int k=0; k<2; k++) {
+        if(layer->mode->hybridPath[2*i+k].pathType == VG_LITE_DRAW_STROKE_PATH ||
+                layer->mode->hybridPath[2*i+k].pathType == VG_LITE_DRAW_FILL_STROKE_PATH)
         {
             stroke_info_t *stroke_info = &layer->img_info->stroke_info[i];
             vg_err = vg_lite_set_stroke(&layer->handle[i],
@@ -357,6 +369,7 @@ int layer_init(UILayers_t *layer)
                 PRINTF("\r\nERROR: %d Failed to initialize graphic artifacts!\r\n\r\n", __LINE__);
                 return vg_err;
             }
+        }
         }
 	}
 
