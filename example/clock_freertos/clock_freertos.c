@@ -52,8 +52,6 @@ static void vglite_task(void *pvParameters);
  ******************************************************************************/
 static vg_lite_display_t display;
 static vg_lite_window_t window;
-static vg_lite_matrix_t matrix;
-volatile bool s_frameDone = false;
 
 #if (CUSTOM_VGLITE_MEMORY_CONFIG != 1)
 #error "Application must be compiled with CUSTOM_VGLITE_MEMORY_CONFIG=1"
@@ -117,7 +115,7 @@ static UILayers_t g_layers[MAX_UI_LAYERS] =
 
 /*******************************************************************************
  * Code
- *******************************/
+ ******************************************************************************/
 
 int main(void)
 {
@@ -154,7 +152,6 @@ static void cleanup(void)
 static vg_lite_error_t init_vg_lite(void)
 {
     vg_lite_error_t error = VG_LITE_SUCCESS;
-    int fb_width, fb_height;
 
     error = VGLITE_CreateDisplay(&display);
     if (error)
@@ -186,14 +183,6 @@ static vg_lite_error_t init_vg_lite(void)
         cleanup();
         return error;
     }
-
-    // Setup a scale at center of buffer.
-    fb_width  = window.width;
-    fb_height = window.height;
-    vg_lite_identity(&matrix);
-    vg_lite_translate(fb_width / 2 - 20 * fb_width / 640.0f, fb_height / 2 - 100 * fb_height / 480.0f, &matrix);
-    vg_lite_scale(2, 2, &matrix);
-    vg_lite_scale(fb_width / 640.0f, fb_height / 480.0f, &matrix);
 
     return error;
 }
