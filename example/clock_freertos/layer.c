@@ -55,7 +55,7 @@ static void mat_mult(vg_lite_matrix_t *mR, vg_lite_float_t *mA, vg_lite_matrix_t
 
 static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
 {
-    int row, column;
+    int row;
 
     for (row = 0; row < 3; row++) {
         if (m1->m[row][0] != m2->m[row][0])
@@ -219,10 +219,7 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
 int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix)
 {
 	vg_lite_error_t error;
-	static vg_lite_color_ramp_t vgColorRamp[256];
-	int type;
 
-	const int matrix_size = sizeof(vg_lite_matrix_t);
 	/* matrix_size_in_float an array of 9 float values */
 	const int matrix_size_in_float = 9;
 	gradient_cache_entry_t *cachedGradient = NULL;

@@ -136,7 +136,6 @@ int main(void)
 
 static void cleanup(void)
 {
-    uint8_t i;
     vg_lite_error_t error;
 
     for (int i = 0; i < MAX_UI_LAYERS; i++) {
@@ -204,8 +203,6 @@ void animateClock()
 
 static void redraw()
 {
-    vg_lite_error_t error = VG_LITE_SUCCESS;
-
     vg_lite_buffer_t *rt = VGLITE_GetRenderTarget(&window);
     if (rt == NULL)
     {
