@@ -1,7 +1,7 @@
 #!/bin/bash
 
-TOOLKIT_PATH=/opt/BUILD/GTEC/VGLITE/gpu-vglite-toolkit
-OUTPUT_PATH=/opt/BUILD/GTEC/VGLITE/gpu-vglite-examples/example/clock_freertos
+TOOLKIT_PATH=/opt/nxp/gpu-vglite-toolkit
+OUTPUT_PATH=${PWD}
 ASSET_PATH=${OUTPUT_PATH}/resources
 
 function include_layer_h() {
@@ -11,12 +11,10 @@ function include_layer_h() {
 }
 
 function transform_svg_to_header() {
-   cd ${TOOLKIT_PATH}
-   ./gpu-vglite-toolkit.sh $1 ${OUTPUT_PATH}/$2
+   ${TOOLKIT_PATH}/gpu-vglite-toolkit.sh $1 ${OUTPUT_PATH}/$2
 
    # Include layer.h in generated header file
    include_layer_h ${OUTPUT_PATH}/$2
-   cd -
 }
 
 clock_dial_options=("ClockAnalogOrange.svg" "ClockAnalogLinear.svg" "ClockAnalogRadial.svg")
