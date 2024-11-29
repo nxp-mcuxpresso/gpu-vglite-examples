@@ -104,7 +104,7 @@ uint32_t vglite_heap_size     = VGLITE_HEAP_SZ;
 static vg_lite_matrix_t g_dial_matrix;
 static vg_lite_matrix_t g_hour_matrix;
 static vg_lite_matrix_t g_minute_matrix;
-static int win_cx, win_cy;
+static vg_lite_float_t win_cx, win_cy;
 
 static UILayers_t g_layers[MAX_UI_LAYERS] =
 {

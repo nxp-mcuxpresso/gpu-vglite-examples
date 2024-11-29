@@ -68,7 +68,7 @@ static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
     return 1;
 }
 
-int gradient_cache_init(void)
+vg_lite_error_t gradient_cache_init(void)
 {
     g_grad_cache = (gradient_cache_entry_t*) pvPortMalloc(MAX_GRADIENT_CACHE * sizeof(gradient_cache_entry_t));
     if (g_grad_cache == NULL) {
@@ -110,7 +110,8 @@ void _gradient_stop_color_to_vglite_color(int32_t num_stop_points, stopValue_t *
 	}
 }
 
-int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry)
+vg_lite_error_t gradient_cache_find(void *grad, GradientCacheEntry_t type,
+	vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry)
 {
 	int unused_idx;
     int i;
@@ -299,7 +300,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
     return VG_LITE_SUCCESS;
 }
 
-int layer_init(UILayers_t *layer)
+vg_lite_error_t layer_init(UILayers_t *layer)
 {
     int i;
     vg_lite_error_t vg_err;
@@ -373,7 +374,7 @@ int layer_init(UILayers_t *layer)
 	return VG_LITE_SUCCESS;
 }
 
-int layer_free(UILayers_t *layer)
+vg_lite_error_t layer_free(UILayers_t *layer)
 {
     if (layer == NULL)
         return VG_LITE_INVALID_ARGUMENT;
