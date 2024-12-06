@@ -39,8 +39,8 @@ elif [ "$1" = "mimxrt700evk" ]; then
     flash_rel="flash_release"
 fi
 
-./build_script.sh  examples/src/vglite_examples/tiger_freertos tiger_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/src/vglite_examples/vector_freertos vector_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/src/vglite_examples/tiled_freertos tiled_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/src/vglite_examples/cube_freertos cube_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/src/vglite_examples/clock_freertos clock_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
+./build_script.sh  examples/vglite_examples/tiger_freertos tiger_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
+./build_script.sh  examples/vglite_examples/vector_freertos vector_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
+./build_script.sh  examples/vglite_examples/tiled_freertos tiled_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
+./build_script.sh  examples/vglite_examples/cube_freertos cube_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
+./build_script.sh  examples/vglite_examples/clock_freertos clock_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
