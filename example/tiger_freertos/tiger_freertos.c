@@ -146,20 +146,19 @@ static vg_lite_error_t init_vg_lite(void)
         PRINTF("VGLITE_CreateWindow failed: VGLITE_CreateWindow() returned error %d\r\n", error);
         return error;
     }
-    // Initialize the draw.
-    error = vg_lite_init(TW, TH);
-    if (error)
-    {
-        PRINTF("vg_lite engine init failed: vg_lite_init() returned error %d\r\n", error);
-        cleanup();
-        return error;
-    }
-
     // Set GPU command buffer size for this drawing task.
     error = vg_lite_set_command_buffer_size(VGLITE_COMMAND_BUFFER_SZ);
     if (error)
     {
         PRINTF("vg_lite_set_command_buffer_size() returned error %d\n", error);
+        cleanup();
+        return error;
+    }
+    // Initialize the draw.
+    error = vg_lite_init(TW, TH);
+    if (error)
+    {
+        PRINTF("vg_lite engine init failed: vg_lite_init() returned error %d\r\n", error);
         cleanup();
         return error;
     }

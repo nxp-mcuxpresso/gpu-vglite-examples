@@ -47,7 +47,7 @@ static vg_lite_window_t window;
 #if (CUSTOM_VGLITE_MEMORY_CONFIG != 1)
 #error "Application must be compiled with CUSTOM_VGLITE_MEMORY_CONFIG=1"
 #else
-#define VGLITE_COMMAND_BUFFER_SZ (128 * 1024)
+#define VGLITE_COMMAND_BUFFER_SZ (64 * 1024)
 /* On RT595S */
 #if defined(CPU_MIMXRT595SFFOC_cm33) || defined(CPU_MIMXRT798SGFOA_cm33_core0)
 #define VGLITE_HEAP_SZ 0x400000 /* 4 MB */
@@ -133,6 +133,14 @@ static vg_lite_error_t init_vg_lite(void)
     if (error)
     {
         PRINTF("VGLITE_CreateWindow failed: VGLITE_CreateWindow() returned error %d\n", error);
+        return error;
+    }
+    /* Set GPU command buffer size for this drawing task. */
+    error = vg_lite_set_command_buffer_size(vglite_cmd_buff_size);
+    if (error)
+    {
+        PRINTF("vg_lite_set_command_buffer_size() returned error %d\n", error);
+        cleanup();
         return error;
     }
     /* Initialize the draw */
