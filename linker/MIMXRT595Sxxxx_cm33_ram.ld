@@ -4,17 +4,15 @@
 **                          MIMXRT595SFFOC_cm33
 **
 **     Compiler:            GNU C Compiler
-**     Reference manual:    iMXRT500RM Rev.0, 01/2021
+**     Reference manual:    iMXRT500RM Rev.1, 07/2022
 **     Version:             rev. 5.0, 2021-07-28
-**     Build:               b210730
+**     Build:               b241125
 **
 **     Abstract:
 **         Linker file for the GNU C Compiler
 **
 **     Copyright 2016 Freescale Semiconductor, Inc.
-**     Copyright 2016-2021, 2024 NXP
-**     All rights reserved.
-**
+**     Copyright 2016-2024 NXP
 **     SPDX-License-Identifier: BSD-3-Clause
 **
 **     http:                 www.nxp.com
@@ -37,6 +35,7 @@ STACK_SIZE = DEFINED(__stack_size__) ? __stack_size__ : 0x0400;
 /* The SRAM region [0x20000-0x7FFFF] is reserved for Non-cached shared memory between M33 and DSP. */
 /* The SRAM region [0x80000-0x27FFFF] is reserved for DSP code and data. */
 MEMORY
+/* Custom memory config for this example: */
 {
   m_flash               (RX)  : ORIGIN = 0x08000000, LENGTH = 0x00300000
   m_interrupts          (RX)  : ORIGIN = 0x00280000, LENGTH = 0x00000180

@@ -6,7 +6,7 @@
 **     Compiler:            GNU C Compiler
 **     Reference manual:    iMXRT700RM Rev.2 DraftA, 05/2024
 **     Version:             rev. 2.0, 2024-05-28
-**     Build:               b240528
+**     Build:               b240920
 **
 **     Abstract:
 **         Linker file for the GNU C Compiler
@@ -27,7 +27,7 @@
 ENTRY(Reset_Handler)
 
 m_core1_image_maximum_size = 0x00080000;
-m_ezhv_image_maximum_size  = 0x00008000;
+m_ezhv_image_maximum_size = 0x00008000;
 
 DATA_START   = 0x20180000;
 DATA_SIZE    = 0x00080000;
@@ -196,6 +196,8 @@ SECTIONS
     . = ALIGN(4);
     __DATA_RAM = .;
     __data_start__ = .;      /* create a global symbol at data start */
+    *(CacheLineData.init)    /* CacheLineData.init sections */
+    . = ALIGN(16);           /* cache line size = 16 bytes */
     *(CodeQuickAccess)       /* CodeQuickAccess sections */
     *(DataQuickAccess)       /* DataQuickAccess sections */
     *(.data)                 /* .data sections */
@@ -245,6 +247,8 @@ SECTIONS
     . = ALIGN(4);
     __START_BSS = .;
     __bss_start__ = .;
+    *(CacheLineData)
+    . = ALIGN(16); /* cache line size = 16 bytes */
     *(.bss)
     *(.bss*)
     *(COMMON)
