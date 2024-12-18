@@ -1,0 +1,5 @@
+Overview
+========
+This application can render shapes, images and text using VGLite internal commands.
+VGLite internal commands are generated using gpu-vglite-toolkit.
+svg-element-support-matrix.md describes SVG element support.
