@@ -160,9 +160,9 @@ static void prepare_decompress_etc2_assets()
 {
     src.memory = img_etc2;
     src.address = (uint32_t)img_etc2;
-    src.width = etc2_w;
-    src.height = etc2_h;
-    src.stride = etc2_stride;
+    src.width = ETC2_W;
+    src.height = ETC2_H;
+    src.stride = ETC2_STRIDE;
     src.format = VG_LITE_RGBA8888_ETC2_EAC;
     src.tiled = VG_LITE_TILED;
     src.image_mode = VG_LITE_NORMAL_IMAGE_MODE;
