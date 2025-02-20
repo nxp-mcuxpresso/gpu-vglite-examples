@@ -267,7 +267,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 			}
 
 			error = vg_lite_draw_linear_gradient(rt, &layer->handle[i],
-					layer->mode->fillRule[i], transform_matrix,
+					layer->mode->fillRule[i], &tmatrix,
 					&cachedGradient->grad_data.lg.lGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
 			if (error != VG_LITE_SUCCESS)
 				return error;
@@ -285,7 +285,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 			}
 
 			error = vg_lite_draw_radial_gradient(rt, &layer->handle[i],
-					layer->mode->fillRule[i], transform_matrix,
+					layer->mode->fillRule[i], &tmatrix,
 					&cachedGradient->grad_data.rg.rGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
 			if (error != VG_LITE_SUCCESS)
 				return error;
