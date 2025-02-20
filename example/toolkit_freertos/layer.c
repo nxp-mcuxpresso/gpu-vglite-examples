@@ -318,21 +318,24 @@ int layer_init(UILayers_t *layer)
 		PRINTF("\r\nERROR: Memory allocation failed for matrix!\r\n\r\n");
 		return VG_LITE_OUT_OF_MEMORY;
 	}
+    uint32_t data_size;
     for (i = 0; i < layer->img_info->path_count; i++) {
         path_info_t *path_info = &layer->img_info->paths_info[i];
-        vg_err = vg_lite_init_path(&layer->handle[i],
-                    layer->img_info->data_format,
-                    VG_LITE_MEDIUM,
-                    path_info->path_length,
-                    path_info->path_data,
-                    path_info->bounding_box[0],
-                    path_info->bounding_box[1],
-                    path_info->bounding_box[2],
-                    path_info->bounding_box[3]);
+        data_size = vg_lite_get_path_length(path_info->path_cmds, path_info->path_length, VG_LITE_S32);
+
+        vg_err = vg_lite_init_path(&layer->handle[i], layer->img_info->data_format, VG_LITE_MEDIUM,
+               data_size, NULL, 0, 0, 0, 0);
         if (vg_err != VG_LITE_SUCCESS) {
 		    PRINTF("\r\nERROR: Failed to initialize graphic artifacts!\r\n\r\n");
 		    return vg_err;
 	    }
+
+        vg_err = vg_lite_append_path(&layer->handle[i], path_info->path_cmds, path_info->path_args, path_info->path_length);
+        if (vg_err != VG_LITE_SUCCESS) {
+		    PRINTF("\r\nERROR: vg_lite_append_path failed! Unable to append path data.\r\n\r\n");
+		    return vg_err;
+	    }
+
         layer->handle[i].add_end = path_info->end_path_flag;
 
         for (int k=0; k<2; k++) {
