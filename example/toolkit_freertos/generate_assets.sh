@@ -5,7 +5,7 @@ OUTPUT_PATH=${PWD}
 ASSET_PATH=${OUTPUT_PATH}/resources
 
 function include_layer_h() {
-   echo -e "#include \"layer.h\"\n" > out.h  
+   echo -e "#include \"vglite_layer.h\"\n" > out.h
    cat $1 >> out.h  
    mv out.h $1
 }
@@ -13,7 +13,7 @@ function include_layer_h() {
 function transform_svg_to_header() {
    ${TOOLKIT_PATH}/gpu-vglite-toolkit.sh $1 ${OUTPUT_PATH}/$2
 
-   # Include layer.h in generated header file
+   # Include vglite_layer.h in generated header file
    include_layer_h ${OUTPUT_PATH}/$2
 }
 

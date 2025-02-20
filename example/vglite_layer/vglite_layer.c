@@ -13,7 +13,7 @@
 #include "pin_mux.h"
 #include "board.h"
 
-#include "layer.h"
+#include "vglite_layer.h"
 
 /* GLobals */
 static gradient_cache_entry_t *g_grad_cache = NULL;

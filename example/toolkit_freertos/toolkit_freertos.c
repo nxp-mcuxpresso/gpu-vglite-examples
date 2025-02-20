@@ -15,7 +15,7 @@
 #include "board.h"
 #include "app.h"
 
-#include "layer.h"
+#include "vglite_layer.h"
 #include "svgt12_test.h"
 
 #include "vglite_support.h"

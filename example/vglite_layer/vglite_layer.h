@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 /*
- * \file layer.h
+ * \file vglite_layer.h
  *
  * This file is intended to provide generic APIs to abstract and rendere SVG path drawing using VGLite APIs.
  */
