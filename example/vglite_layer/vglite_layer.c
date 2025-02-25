@@ -33,7 +33,7 @@ static gradient_cache_entry_t *g_grad_cache = NULL;
  * Prototypes
  ******************************************************************************/
 vg_lite_error_t layer_create_image_buffers(UILayers_t *layer);
-vg_lite_error_t layer_draw_images(UILayers_t *layer);
+vg_lite_error_t layer_draw_images(vg_lite_buffer_t *rt, UILayers_t *layer);
 vg_lite_error_t layer_free_images(UILayers_t *layer);
 
 static uint32_t ARGB_2_VGLITE_COLOR(uint32_t x)
@@ -238,13 +238,13 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
         uint8_t *decomp_data;
 
         layer->dst_images = (vg_lite_buffer_t*) pvPortMalloc(image_count * sizeof(vg_lite_buffer_t));
-        if (layer->dst_images != NULL) {
+        if (layer->dst_images == NULL) {
             PRINTF("\r\nERROR: Failed to initialize memory descriptors!\r\n");
             return VG_LITE_OUT_OF_MEMORY;
         }
 
         layer->dst_img_data = (uint8_t *)pvPortMalloc(image_count * sizeof(uint8_t *));
-        if (layer->dst_img_data != NULL) {
+        if (layer->dst_img_data == NULL) {
             PRINTF("\r\nERROR: Failed to initialize QOI decode memory pointers!\r\n");
             return VG_LITE_OUT_OF_MEMORY;
         }
@@ -286,7 +286,7 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
     return VG_LITE_SUCCESS;
 }
 
-vg_lite_error_t layer_draw_images(UILayers_t *layer)
+vg_lite_error_t layer_draw_images(vg_lite_buffer_t *rt, UILayers_t *layer)
 {
     vg_lite_error_t error;
 
@@ -294,7 +294,7 @@ vg_lite_error_t layer_draw_images(UILayers_t *layer)
     {
         image_buf_data_t * raw_img = layer->img_info->raw_images[j];
 
-        error = vg_lite_blit(rt, &raw_img->dst_images[j], raw_img->matrix,
+        error = vg_lite_blit(rt, &layer->dst_images[j], &raw_img->matrix,
             VG_LITE_BLEND_NONE, 0, VG_LITE_FILTER_BI_LINEAR);
         if (error != VG_LITE_SUCCESS) {
             PRINTF("Error: vg_lite_blit() failed! %d\r\n", error);
@@ -325,18 +325,19 @@ vg_lite_error_t layer_free_images(UILayers_t *layer)
                 vPortFree(raw_img->raw_decode_data);
             }
             if (raw_img->format != VG_LITE_RGBA8888 ) {
-                if (layer->dst_img_data[j] != NULL) {
+                if (layer->dst_img_data != NULL) {
                     /* Release memory for decoded QOI image */
                     vPortFree(layer->dst_img_data[j]);
+                    layer->dst_img_data = NULL;
                 }
             }
         }
         vPortFree(layer->dst_images);
         /* Release memory pointer holder for decoded QOI image */
-        if (layer->dst_img_data[j] != NULL) {
+        if (layer->dst_img_data != NULL) {
             vPortFree(layer->dst_img_data);
-        }
-        vPortFree(layer->img_info->dst_images);
+        }        
+        vPortFree(layer->dst_images);
         layer->dst_images = NULL;
     }
 }
@@ -420,7 +421,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		}
 	  }
     }
-    error = layer_draw_images(layer);
+    error = layer_draw_images(rt, layer);
     vg_lite_finish();
 
     return error;
@@ -500,7 +501,7 @@ int layer_init(UILayers_t *layer)
         }
 	}
 
-	vg_err = layer_create_images(layer);
+	vg_err = layer_create_image_buffers(layer);
 
 	return vg_err;
 }
