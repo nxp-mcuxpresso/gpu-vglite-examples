@@ -25,6 +25,13 @@ static gradient_cache_entry_t *g_grad_cache = NULL;
 	(uint32_t)r
 #endif
 
+/*******************************************************************************
+ * Prototypes
+ ******************************************************************************/
+vg_lite_error_t layer_create_image_buffers(UILayers_t *layer);
+vg_lite_error_t layer_draw_images(UILayers_t *layer);
+vg_lite_error_t layer_free_images(UILayers_t *layer);
+
 static uint32_t ARGB_2_VGLITE_COLOR(uint32_t x)
 {
 	uint32_t r, g, b, a;
@@ -216,6 +223,87 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
 	return VG_LITE_SUCCESS;
 }
 
+vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
+{
+    vg_lite_error_t err;
+
+    if (layer->img_info->image_count > 0) {
+        layer->img_info->dst_images = (vg_lite_buffer_t*) pvPortMalloc(layer->img_info->image_count * sizeof(vg_lite_buffer_t));
+        if (layer->img_info->dst_images != NULL) {
+            PRINTF("\r\nERROR: Failed to initialize memory descriptors!\r\n");
+            return VG_LITE_OUT_OF_MEMORY;
+        }
+
+        for (int j=0; j<layer->img_info->image_count; j++)
+        {
+            image_buf_data_t *raw_img = layer->img_info->raw_images[j];
+            vg_lite_buffer_t *dst_img = &layer->img_info->dst_images[j];
+
+            memset(dst_img, 0, sizeof(vg_lite_buffer_t));
+            dst_img->width   = raw_img->img_width;
+            dst_img->height  = raw_img->img_height;
+            dst_img->stride  = raw_img->img_width * 4;
+            dst_img->format  = raw_img->format;
+
+            err = vg_lite_allocate(dst_img);
+            if (err != VG_LITE_SUCCESS) {
+                PRINTF("ERROR: Failed to allocate RGBA8888 image buffer (err=%d)!\r\n",
+                    err);
+                return err;
+           }
+
+            dst_img->memory  = raw_img->raw_data;
+            dst_img->address = raw_img->raw_data;
+        }
+    }
+
+    return VG_LITE_SUCCESS;
+}
+
+vg_lite_error_t layer_draw_images(UILayers_t *layer)
+{
+    vg_lite_error_t error;
+
+    for (int j=0; j<layer->img_info->image_count; j++)
+    {
+        image_buf_data_t * raw_img = layer->img_info->raw_images[j];
+
+        error = vg_lite_blit(rt, &raw_img->dst_images[j], raw_img->matrix,
+            VG_LITE_BLEND_NONE, 0, VG_LITE_FILTER_BI_LINEAR);
+        if (error != VG_LITE_SUCCESS) {
+            PRINTF("Error: vg_lite_blit() failed! %d\r\n", error);
+            return error;
+        }
+    }
+
+    return VG_LITE_SUCCESS;
+}
+
+vg_lite_error_t layer_free_images(UILayers_t *layer)
+{
+    vg_lite_error_t error;
+
+    if (layer->img_info->image_count > 0 && layer->img_info->dst_images != NULL) {
+
+        for (int j=0; j<layer->img_info->image_count; j++)
+        {
+            image_buf_data_t *raw_img = layer->img_info->raw_images[j];
+            vg_lite_buffer_t *dst_img = &layer->img_info->dst_images[j];
+
+            error = vg_lite_free(dst_img);
+            if ( error != VG_LITE_SUCCESS) {
+                PRINTF("Error: Failed to release memory. error=%d (%p)!\r\n", error, dst_img);
+            }
+
+            if (raw_img->raw_decode_data != NULL) {
+                vPortFree(raw_img->raw_decode_data);
+            }
+        }
+        vPortFree(layer->img_info->dst_images);
+        layer->img_info->dst_images = NULL;
+    }
+}
+
 int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix)
 {
 	vg_lite_error_t error;
@@ -295,8 +383,10 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		}
 	  }
     }
+    error = layer_draw_images(layer);
     vg_lite_finish();
-    return VG_LITE_SUCCESS;
+
+    return error;
 }
 
 int layer_init(UILayers_t *layer)
@@ -373,7 +463,9 @@ int layer_init(UILayers_t *layer)
         }
 	}
 
-	return VG_LITE_SUCCESS;
+	vg_err = layer_create_images(layer);
+
+	return vg_err;
 }
 
 int layer_free(UILayers_t *layer)
@@ -390,6 +482,7 @@ int layer_free(UILayers_t *layer)
         layer->matrix = NULL;
     }
 
+    layer_free_images(layer);
 	return VG_LITE_SUCCESS;
 }
 
