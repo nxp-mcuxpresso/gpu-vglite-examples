@@ -52,6 +52,22 @@ typedef struct path_info {
     uint8_t end_path_flag;
 } path_info_t;
 
+typedef struct glyph_info {
+    uint32_t  path_length;
+    int32_t  *path_data;
+    uint8_t end_path_flag;
+    int hx;
+    float bbox[4];
+}glyph_info_t;
+
+typedef struct font_info {
+    char *font_name;
+    uint32_t max_glyphs;
+    uint16_t units_per_em;
+    uint16_t *unicode;
+    glyph_info_t gi[];
+}font_info_t;
+
 typedef struct stroke_info {
     uint32_t dashPatternCnt;
     float dashPhase;
@@ -63,6 +79,30 @@ typedef struct stroke_info {
     vg_lite_join_style_t linejoin;
 } stroke_info_t;
 
+typedef struct msg_glyph_item {
+    uint16_t g_u16; /* Unicode number of glyph */
+    uint16_t k; /* kerning difference between g1 -> g2 transition */
+} msg_glyph_item_t;
+
+typedef struct svg_text_string_data {
+    int x;
+    int y; /* Top,left co-ordinates of text region */
+    int font_size;
+    float *tmatrix; /* Transform matrix for text area */
+    uint32_t text_color; /* Color value in ARGB format */
+    font_info_t *font_face; /* Pointer to pre-defined font-face */
+    int msg_len; /* Length of message in number of unicode bytes */
+    int direction; /* Glyph layout direction
+        Supported: left->right
+        Unsupported: right->left, top->bottom, bottom->top */
+    msg_glyph_item_t *msg_glyphs;
+} svg_text_string_data_t;
+
+typedef struct svg_text_info {
+    int num_text_strings;
+    svg_text_string_data_t *text_strings;
+} svg_text_info_t;
+
 typedef struct image_info {
     char *image_name;
     int  image_size[2];
@@ -70,6 +110,7 @@ typedef struct image_info {
     float *transform;
     int path_count;
     stroke_info_t *stroke_info;
+    svg_text_info_t *text_info;
     uint8_t image_count;
     image_buf_data_t **raw_images;
     path_info_t paths_info[];
