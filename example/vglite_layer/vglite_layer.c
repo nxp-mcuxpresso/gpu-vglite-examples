@@ -15,6 +15,10 @@
 
 #include "vglite_layer.h"
 
+#define QOI_MALLOC(sz) pvPortMalloc(sz)
+#define QOI_IMPLEMENTATION
+#include "qoi.h"
+
 /* GLobals */
 static gradient_cache_entry_t *g_grad_cache = NULL;
 
@@ -228,6 +232,10 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
     vg_lite_error_t err;
 
     if (layer->img_info->image_count > 0) {
+        qoi_desc desc;
+        int channels = 4;
+        uint8_t *decomp_data;
+
         layer->img_info->dst_images = (vg_lite_buffer_t*) pvPortMalloc(layer->img_info->image_count * sizeof(vg_lite_buffer_t));
         if (layer->img_info->dst_images != NULL) {
             PRINTF("\r\nERROR: Failed to initialize memory descriptors!\r\n");
@@ -239,11 +247,20 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
             image_buf_data_t *raw_img = layer->img_info->raw_images[j];
             vg_lite_buffer_t *dst_img = &layer->img_info->dst_images[j];
 
+            if (raw_img->format != VG_LITE_RGBA8888 ) {
+                uint8_t *decomp_data = qoi_decode(raw_img->raw_data, raw_img->size, &desc, channels);
+                if (!decomp_data) {
+                    PRINTF("\r\nERROR: Decompression is failed!\r\n\r\n");
+                    return VG_LITE_INVALID_ARGUMENT;
+                }
+                raw_img->raw_decode_data = decomp_data;
+            }
+
             memset(dst_img, 0, sizeof(vg_lite_buffer_t));
             dst_img->width   = raw_img->img_width;
             dst_img->height  = raw_img->img_height;
             dst_img->stride  = raw_img->img_width * 4;
-            dst_img->format  = raw_img->format;
+            dst_img->format  = VG_LITE_RGBA8888;
 
             err = vg_lite_allocate(dst_img);
             if (err != VG_LITE_SUCCESS) {
