@@ -144,6 +144,8 @@ typedef struct UILayers {
       vg_lite_matrix_t *matrix;
       gradient_mode_t *mode;
       uint32_t *color;
+      vg_lite_buffer_t *dst_images;
+      uint8_t **dst_img_data;
 } UILayers_t;
 
 #define UI_LAYER_DATA(x) {&x, NULL, NULL, &x##_gradient_info, x##_color_data}
