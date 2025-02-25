@@ -19,6 +19,25 @@
 
 #include "vg_lite.h"
 
+#ifndef IMAGE_BUF_DATA_H
+#define IMAGE_BUF_DATA_H
+
+typedef struct image_buf_data {
+    int16_t img_width;
+    int16_t img_height;
+    int16_t width;
+    int16_t height;
+    int16_t format;
+    vg_lite_matrix_t matrix;
+    int16_t stride;
+    uint8_t *raw_data;
+    uint32_t *size;
+    uint8_t *raw_decode_data;
+    vg_lite_buffer_t *dst_images
+} image_buf_data_t;
+
+#endif
+
 typedef union data_mnemonic {
     int32_t cmd;
     int32_t data;
@@ -51,6 +70,8 @@ typedef struct image_info {
     float *transform;
     int path_count;
     stroke_info_t *stroke_info;
+    uint8_t image_count;
+    image_buf_data_t **raw_images;
     path_info_t paths_info[];
 } image_info_t;
 
