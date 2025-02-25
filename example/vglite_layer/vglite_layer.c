@@ -380,7 +380,6 @@ int layer_font_glyph_cache_free(void)
 int layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, font_glyph_cache_entry_t **handle, uint32_t text_data_size)
 {
     vg_lite_error_t vg_err = VG_LITE_SUCCESS;
-    int glyph_hdl = 0;
     int gIdx = -1, cacheIdx = -1, i = 0;
     int space_gIdx = font->max_glyphs;
     /* Reset output parameter */
@@ -418,7 +417,7 @@ int layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, font_glyph_ca
         }
     }
     if (i == MAX_FONT_CACHE_SZ) {
-        printf("ERROR: font-cache exhausted", g_u16);
+        printf("ERROR: font-cache exhausted %d", g_u16);
         //TODO: It is possible recycle cache entries using LRU
         return VG_LITE_OUT_OF_MEMORY;
     }
