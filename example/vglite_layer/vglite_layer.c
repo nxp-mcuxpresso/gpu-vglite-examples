@@ -29,6 +29,9 @@ static gradient_cache_entry_t *g_grad_cache = NULL;
 	(uint32_t)r
 #endif
 
+/* Space horizontal advancement*/
+#define SPACE_HX 278
+
 /*******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -344,6 +347,161 @@ vg_lite_error_t layer_free_images(UILayers_t *layer)
     return VG_LITE_SUCCESS;
 }
 
+#define MAX_FONT_CACHE_SZ (27*2)
+typedef struct font_glyph_cache_entry {
+    uint16_t u16;
+    void *path_data;
+    int hx; /* horiz-adv-x */
+    vg_lite_path_t handle;
+}font_glyph_cache_entry_t;
+
+static font_glyph_cache_entry_t *g_font_glyph_cache = NULL;
+
+int layer_font_glyph_cache_init(void)
+{
+    g_font_glyph_cache = pvPortMalloc(sizeof(font_glyph_cache_entry_t)*MAX_FONT_CACHE_SZ);
+    if (g_font_glyph_cache == NULL) {
+        PRINTF("\r\nERROR: Failed to initialize memory descriptors!\r\n");
+        return VG_LITE_OUT_OF_MEMORY;
+    }
+    memset(g_font_glyph_cache, 0, sizeof(font_glyph_cache_entry_t)*MAX_FONT_CACHE_SZ);
+    return VG_LITE_SUCCESS;
+}
+
+int layer_font_glyph_cache_free(void)
+{
+    if (g_font_glyph_cache != NULL) {
+        vPortFree(g_font_glyph_cache);
+        g_font_glyph_cache = NULL;
+    }
+    return VG_LITE_SUCCESS;
+}
+
+int layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, font_glyph_cache_entry_t **handle, uint32_t text_data_size)
+{
+    vg_lite_error_t vg_err = VG_LITE_SUCCESS;
+    int glyph_hdl = 0;
+    int gIdx = -1, cacheIdx = -1, i = 0;
+    int space_gIdx = font->max_glyphs;
+    /* Reset output parameter */
+    *handle =  NULL;
+
+    /* Find glyph for unicode number */
+    for (gIdx = 0; gIdx< font->max_glyphs; gIdx++) {
+        if (font->unicode[gIdx] == 0x20)
+            space_gIdx = gIdx;
+        else if (g_u16 == font->unicode[gIdx]) {
+            if (gIdx > space_gIdx)
+                gIdx = gIdx - 1;
+            break;
+        }
+    }
+
+    if (gIdx == font->max_glyphs) {
+        printf("ERROR: glyph=[%04x] not found ", g_u16);
+        //TODO: It is possible to share missing-glyph for given font.
+        return VG_LITE_INVALID_ARGUMENT;
+    }
+
+    /* Lookup cache if entry exits */
+    for (i=0; i<MAX_FONT_CACHE_SZ; i++) {
+        if (g_u16 == g_font_glyph_cache[i].u16) {
+            *handle = &g_font_glyph_cache[i];
+            return VG_LITE_SUCCESS;
+        }
+    }
+
+    /* Lookup empty entry in cache table */
+    for (i=0; i<MAX_FONT_CACHE_SZ; i++) {
+        if (g_font_glyph_cache[i].path_data == NULL) {
+            break;
+        }
+    }
+    if (i == MAX_FONT_CACHE_SZ) {
+        printf("ERROR: font-cache exhausted", g_u16);
+        //TODO: It is possible recycle cache entries using LRU
+        return VG_LITE_OUT_OF_MEMORY;
+    }
+
+    /* Create handle from glyph path_info */
+    cacheIdx = i;
+    text_data_size = vg_lite_get_path_length(font->gi[gIdx].path_cmds, font->gi[gIdx].path_length, VG_LITE_S32);
+    vg_err = vg_lite_init_path(&g_font_glyph_cache[cacheIdx].handle, VG_LITE_S32, VG_LITE_MEDIUM,
+                    text_data_size, NULL, 0, 0, 0, 0);
+    if (vg_err != VG_LITE_SUCCESS) {
+        PRINTF("\r\nERROR: Failed to initialize graphic artifacts!\r\n\r\n");
+        return vg_err;
+    }
+    vg_err = vg_lite_append_path(&g_font_glyph_cache[cacheIdx].handle, font->gi[gIdx].path_cmds, font->gi[gIdx].path_args, font->gi[gIdx].path_length);
+    if (vg_err != VG_LITE_SUCCESS) {
+            PRINTF("\r\nERROR: vg_lite_append_path Failed Couldn't append path data!\r\n\r\n");
+            return vg_err;
+    }
+       /* Adjust end-path configuration */
+    g_font_glyph_cache[cacheIdx].handle.add_end = font->gi[gIdx].end_path_flag;
+    /* - Create path from path_info - ends */
+
+    /* return newly created path handle */
+    g_font_glyph_cache[i].path_data = g_font_glyph_cache[cacheIdx].handle.path;
+    g_font_glyph_cache[i].u16 = g_u16;
+    g_font_glyph_cache[i].hx = font->gi[gIdx].hx;
+    *handle = &g_font_glyph_cache[cacheIdx];
+
+    return VG_LITE_SUCCESS;
+}
+
+int layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix)
+{
+    svg_text_info_t *ti = layer->img_info->text_info;
+    vg_lite_error_t vg_err = VG_LITE_SUCCESS;
+    const int matrix_size_in_float = 9;
+
+    /* Count total number of glyphs */
+    for (int i = 0; i < ti->num_text_strings; i++) {
+        svg_text_string_data_t *td = NULL;
+        font_info_t *font = NULL;
+        vg_lite_matrix_t tmatrix;
+        uint32_t text_data_size;
+
+        td   = &ti->text_strings[i];
+        font = td->font_face;
+
+        mat_mult(&tmatrix, &td->tmatrix[i * matrix_size_in_float], transform_matrix);
+        vg_lite_translate(td->x, td->y, &tmatrix);
+
+        float font_scale_factor = (float)td->font_size/font->units_per_em;
+        vg_lite_scale(font_scale_factor, -font_scale_factor, &tmatrix);
+        for (int j=0; j<td->msg_len; j++) {
+            font_glyph_cache_entry_t *glyph = NULL; /* Glyph handle */
+            if (td->msg_glyphs[j].g_u16 != 0x20) {
+                vg_err = layer_font_glyph_cache_find(font, td->msg_glyphs[j].g_u16, &glyph, text_data_size);
+                if (vg_err != VG_LITE_SUCCESS) {
+                    printf("ERROR: layer_draw_text failed (%d)\n", vg_err);
+                    return vg_err;
+                }
+                /* Render a glyph as polyline shape */
+                vg_err = vg_lite_draw(rt, &glyph->handle,
+                            VG_LITE_FILL_EVEN_ODD,
+                            &tmatrix,
+                            VG_LITE_BLEND_NONE,
+                            ARGB_2_VGLITE_COLOR(td->text_color));
+                if (vg_err) {
+                    PRINTF("Error: vg_lite_draw() returned error %d\r\n", vg_err);
+                    return vg_err;
+                }
+
+                /* Update matrix with adv parameters */
+                vg_lite_translate(glyph->hx, 0, &tmatrix);
+            }
+            else {
+                vg_lite_translate(SPACE_HX, 0, &tmatrix);
+            }
+        }
+    }
+
+    return VG_LITE_SUCCESS;
+}
+
 int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix)
 {
 	vg_lite_error_t error;
@@ -424,9 +582,16 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 	  }
     }
     error = layer_draw_images(rt, layer);
+    if (error != VG_LITE_SUCCESS)
+        return error;
+
+    error = layer_draw_text(rt, layer, transform_matrix);
+    if (error != VG_LITE_SUCCESS)
+        return error;
+
     vg_lite_finish();
 
-    return error;
+    return VG_LITE_SUCCESS;
 }
 
 int layer_init(UILayers_t *layer)
@@ -504,8 +669,14 @@ int layer_init(UILayers_t *layer)
 	}
 
 	vg_err = layer_create_image_buffers(layer);
+        if (vg_err != VG_LITE_SUCCESS)
+            return vg_err;
 
-	return vg_err;
+        vg_err = layer_font_glyph_cache_init();
+        if (vg_err != VG_LITE_SUCCESS)
+            return vg_err;
+
+        return VG_LITE_SUCCESS;
 }
 
 int layer_free(UILayers_t *layer)
@@ -523,7 +694,10 @@ int layer_free(UILayers_t *layer)
     }
 
     layer_free_images(layer);
-	return VG_LITE_SUCCESS;
+
+    layer_font_glyph_cache_free();
+
+    return VG_LITE_SUCCESS;
 }
 
 
