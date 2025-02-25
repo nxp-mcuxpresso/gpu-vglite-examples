@@ -31,7 +31,7 @@ typedef struct image_buf_data {
     vg_lite_matrix_t matrix;
     int16_t stride;
     uint8_t *raw_data;
-    uint32_t *size;
+    uint32_t size;
     uint8_t *raw_decode_data;
     vg_lite_buffer_t *dst_images
 } image_buf_data_t;

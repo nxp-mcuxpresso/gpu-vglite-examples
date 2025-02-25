@@ -243,7 +243,7 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
             return VG_LITE_OUT_OF_MEMORY;
         }
 
-        layer->dst_img_data = (uint8_t *)pvPortMalloc(image_count * sizeof(uint8_t *));
+        layer->dst_img_data = (uint8_t **)pvPortMalloc(image_count * sizeof(uint8_t *));
         if (layer->dst_img_data == NULL) {
             PRINTF("\r\nERROR: Failed to initialize QOI decode memory pointers!\r\n");
             return VG_LITE_OUT_OF_MEMORY;
@@ -279,7 +279,7 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
            }
 
             dst_img->memory  = layer->dst_img_data[j];
-            dst_img->address = layer->dst_img_data[j];
+            dst_img->address = (vg_lite_uint32_t)layer->dst_img_data[j];
         }
     }
 
@@ -340,6 +340,8 @@ vg_lite_error_t layer_free_images(UILayers_t *layer)
         vPortFree(layer->dst_images);
         layer->dst_images = NULL;
     }
+
+    return VG_LITE_SUCCESS;
 }
 
 int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix)
