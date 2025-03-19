@@ -29,11 +29,11 @@ ENTRY(Reset_Handler)
 m_core1_image_maximum_size = 0x00080000;
 m_ezhv_image_maximum_size = 0x00008000;
 
-DATA_START   = 0x000A0000;
-DATA_SIZE    = 0x00160000;
+DATA_START   = 0x20100000;
+DATA_SIZE    = 0x00120000;
 
-NCACHE_START = DEFINED(__use_shmem__) ? 0x20202000 : 0x20200000;
-NCACHE_SIZE  = DEFINED(__use_shmem__) ? 0x0057E000 : 0x00580000;
+NCACHE_START = DEFINED(__use_shmem__) ? 0x20222000 : 0x20220000;
+NCACHE_SIZE  = DEFINED(__use_shmem__) ? 0x0055E000 : 0x00560000;
 
 HEAP_SIZE    = DEFINED(__heap_size__)  ? __heap_size__  : 0x2000;
 STACK_SIZE   = DEFINED(__stack_size__) ? __stack_size__ : 0x2200;
@@ -52,8 +52,8 @@ HEAP_START   = DEFINED(__heap_noncacheable__) ? NCACHE_END + 1 : DATA_END + 1;
 MEMORY
 {
   m_flash               (RX)  : ORIGIN = 0x28000000, LENGTH = 0x00200000
-  m_interrupts          (RX)  : ORIGIN = 0x00000000, LENGTH = 0x00000300
-  m_text                (RX)  : ORIGIN = 0x00000300, LENGTH = 0x0009FD00
+  m_interrupts          (RX)  : ORIGIN = 0x00080000, LENGTH = 0x00000300
+  m_text                (RX)  : ORIGIN = 0x00080300, LENGTH = 0x0007FC00
   m_data                (RW)  : ORIGIN = DATA_START, LENGTH = DATA_END - DATA_START + 1
   m_ncache              (RW)  : ORIGIN = NCACHE_START, LENGTH = NCACHE_SIZE
   m_heap                (RW)  : ORIGIN = HEAP_START, LENGTH = HEAP_SIZE
