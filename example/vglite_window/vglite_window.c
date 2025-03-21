@@ -11,9 +11,6 @@
 #include "vg_lite_platform.h"
 #include "vglite_window.h"
 
-#if defined(CPU_MIMXRT798SGFOA_cm33_core0)
-#include "fsl_lcdif.h"
-#endif
 /*******************************************************************************
  * Definitions
  ******************************************************************************/
@@ -65,6 +62,14 @@ static vg_lite_buffer_format_t video_format_to_vglite(video_pixel_format_t forma
 
         case kVIDEO_PixelFormatBGR565:
             fmt = VG_LITE_RGB565;
+            break;
+
+        case kVIDEO_PixelFormatRGB888:
+            fmt = VG_LITE_BGR888;
+            break;
+
+        case kVIDEO_PixelFormatBGR888:
+            fmt = VG_LITE_RGB888;
             break;
 
         case kVIDEO_PixelFormatXRGB8888:
@@ -125,13 +130,6 @@ vg_lite_error_t VGLITE_CreateWindow(vg_lite_display_t *display, vg_lite_window_t
         vg_buffer->stride    = g_fbInfo->bufInfo.strideBytes;
         vg_buffer->format    = video_format_to_vglite(DEMO_BUFFER_PIXEL_FORMAT);
     }
-
-#if defined(CPU_MIMXRT798SGFOA_cm33_core0)
-	lcdif_panel_config_t config;
-    LCDIF_PanelGetDefaultConfig(&config);
-    config.enable = true;
-    LCDIF_SetPanelConfig(LCDIF, 0, &config);
-#endif
 
     status = FBDEV_SetFrameBufferInfo(g_fbdev, g_fbInfo);
     if (status != kStatus_Success)
