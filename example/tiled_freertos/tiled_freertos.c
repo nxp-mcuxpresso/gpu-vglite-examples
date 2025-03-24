@@ -154,6 +154,13 @@ static vg_lite_error_t init_vg_lite(void)
     tiled_buffer.memory  = (void *)TILED_BUFFER1_ADDR;
     tiled_buffer.address = TILED_BUFFER1_ADDR;
 
+    /*
+     * Data is organized in 4x4 pixel tiles for the tiled raster images.
+     * Align height to 4 pixels. Required by the CO5300 display.
+     */
+    if (tiled_buffer.height & 0x3)
+        tiled_buffer.height = (tiled_buffer.height & (~(uint32_t)0x3)) + 4;
+
     /* Align stride to 64 bytes (required for the tiled raster images) */
     if (tiled_buffer.stride & 0x3f)
         tiled_buffer.stride = (tiled_buffer.stride & (~(uint32_t)0x3f)) + 64;
