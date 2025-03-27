@@ -4,8 +4,9 @@
 
 set -e
 
-if [[ $# -ne 2 ]]; then
-    echo "Usage: build_board.sh <board_name> <toolchain_selection>"
+if [[ $# -ne 3 ]]; then
+    echo "Usage: build_board.sh <board_name> <examples_folder> <toolchain_selection>"
+    echo "examples_folder: path/to/examples/vglite_examples, it can be a relative path"
     echo "toolchain_selection: 'iar', 'armgcc', 'mdk', 'all'"
     exit 1
 fi
@@ -39,8 +40,18 @@ elif [ "$1" = "mimxrt700evk" ]; then
     flash_rel="flash_release"
 fi
 
-./build_script.sh  examples/vglite_examples/tiger_freertos tiger_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/vglite_examples/vector_freertos vector_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/vglite_examples/tiled_freertos tiled_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/vglite_examples/cube_freertos cube_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
-./build_script.sh  examples/vglite_examples/clock_freertos clock_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $2
+examples_path_tiger_freertos="$2/tiger_freertos"
+examples_path_vector_freertos="$2/vector_freertos"
+examples_path_tiled_freertos="$2/tiled_freertos"
+examples_path_clock_freertos="$2/cube_freertos"
+examples_path_cube_freertos="$2/clock_freertos"
+examples_path_decompress_etc2_freertos="$2/decompress_etc2_freertos"
+
+./build_script.sh  ${examples_path_tiger_freertos} tiger_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
+./build_script.sh  ${examples_path_vector_freertos} vector_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
+./build_script.sh  ${examples_path_tiled_freertos} tiled_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
+./build_script.sh  ${examples_path_clock_freertos} cube_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
+./build_script.sh  ${examples_path_cube_freertos} clock_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
+if [ "$1" = "mimxrt700evk" ]; then
+  ./build_script.sh  ${examples_path_decompress_etc2_freertos} decompress_etc2_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
+fi

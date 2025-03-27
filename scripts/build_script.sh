@@ -60,6 +60,12 @@ if [ "$9" = "all" ] || [ "$9" = "mdk" ]; then
 fi
 
 if [ "$9" = "all" ] || [ "$9" = "armgcc" ]; then
+
+  if [ "$2" == "decompress_etc2_freertos" ] && [ "$7" != "mimxrt700evk" ]; then
+    echo -e "$2 not supported for the board $7"
+    exit 0
+  fi
+
   echo -e ""
   echo -e "Running command: west build -p always -b $7 $1 ${core} --build-dir=build_cmake --toolchain armgcc --config $3"
   echo -e ""
