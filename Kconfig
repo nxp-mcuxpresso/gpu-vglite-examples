@@ -1,5 +1,4 @@
-
-menu "vglite_sdk"
+menu "vglite"
     config MCUX_COMPONENT_middleware.vglite
-        bool "Component middleware.vglite"
+        bool "GPU VGLite library"
 endmenu
