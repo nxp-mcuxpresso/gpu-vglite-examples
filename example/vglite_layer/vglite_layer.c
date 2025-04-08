@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 NXP
+ * Copyright 2024-2025 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -15,12 +15,20 @@
 
 #include "vglite_layer.h"
 
+
 #define QOI_MALLOC(sz) pvPortMalloc(sz)
 #define QOI_IMPLEMENTATION
 #include "qoi.h"
 
 /* GLobals */
 static gradient_cache_entry_t *g_grad_cache = NULL;
+#define MAX_FONT_CACHE_SZ (27*2)
+typedef struct font_glyph_cache_entry {
+    uint16_t u16;
+    void *path_data;
+    int hx; /* horiz-adv-x */
+    vg_lite_path_t handle;
+}font_glyph_cache_entry_t;
 
 #ifndef TRANSPARENT_VGLITE_COLOUR
 /* VGLITE Internal color format is ABGR */
@@ -347,14 +355,6 @@ vg_lite_error_t layer_free_images(UILayers_t *layer)
     return VG_LITE_SUCCESS;
 }
 
-#define MAX_FONT_CACHE_SZ (27*2)
-typedef struct font_glyph_cache_entry {
-    uint16_t u16;
-    void *path_data;
-    int hx; /* horiz-adv-x */
-    vg_lite_path_t handle;
-}font_glyph_cache_entry_t;
-
 static font_glyph_cache_entry_t *g_font_glyph_cache = NULL;
 
 int layer_font_glyph_cache_init(void)
@@ -449,52 +449,50 @@ int layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, font_glyph_ca
     return VG_LITE_SUCCESS;
 }
 
-int layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix)
+int layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix, int i)
 {
     svg_text_info_t *ti = layer->img_info->text_info;
     vg_lite_error_t vg_err = VG_LITE_SUCCESS;
     const int matrix_size_in_float = 9;
 
     /* Count total number of glyphs */
-    for (int i = 0; i < ti->num_text_strings; i++) {
-        svg_text_string_data_t *td = NULL;
-        font_info_t *font = NULL;
-        vg_lite_matrix_t tmatrix;
-        uint32_t text_data_size;
+    svg_text_string_data_t *td = NULL;
+    font_info_t *font = NULL;
+    vg_lite_matrix_t tmatrix;
+    uint32_t text_data_size;
 
-        td   = &ti->text_strings[i];
-        font = td->font_face;
+    td   = &ti->text_strings[i];
+    font = td->font_face;
 
-        mat_mult(&tmatrix, &td->tmatrix[i * matrix_size_in_float], transform_matrix);
-        vg_lite_translate(td->x, td->y, &tmatrix);
+    mat_mult(&tmatrix, &td->tmatrix[i * matrix_size_in_float], transform_matrix);
+    vg_lite_translate(td->x, td->y, &tmatrix);
 
-        float font_scale_factor = (float)td->font_size/font->units_per_em;
-        vg_lite_scale(font_scale_factor, -font_scale_factor, &tmatrix);
-        for (int j=0; j<td->msg_len; j++) {
-            font_glyph_cache_entry_t *glyph = NULL; /* Glyph handle */
-            if (td->msg_glyphs[j].g_u16 != 0x20) {
-                vg_err = layer_font_glyph_cache_find(font, td->msg_glyphs[j].g_u16, &glyph, text_data_size);
-                if (vg_err != VG_LITE_SUCCESS) {
-                    printf("ERROR: layer_draw_text failed (%d)\n", vg_err);
-                    return vg_err;
-                }
-                /* Render a glyph as polyline shape */
-                vg_err = vg_lite_draw(rt, &glyph->handle,
-                            VG_LITE_FILL_EVEN_ODD,
-                            &tmatrix,
-                            VG_LITE_BLEND_NONE,
-                            ARGB_2_VGLITE_COLOR(td->text_color));
-                if (vg_err) {
-                    PRINTF("Error: vg_lite_draw() returned error %d\r\n", vg_err);
-                    return vg_err;
-                }
-
-                /* Update matrix with adv parameters */
-                vg_lite_translate(glyph->hx, 0, &tmatrix);
+    float font_scale_factor = (float)td->font_size/font->units_per_em;
+    vg_lite_scale(font_scale_factor, -font_scale_factor, &tmatrix);
+    for (int j=0; j<td->msg_len; j++) {
+        font_glyph_cache_entry_t *glyph = NULL; /* Glyph handle */
+        if (td->msg_glyphs[j].g_u16 != 0x20) {
+            vg_err = layer_font_glyph_cache_find(font, td->msg_glyphs[j].g_u16, &glyph, text_data_size);
+            if (vg_err != VG_LITE_SUCCESS) {
+                printf("ERROR: layer_draw_text failed (%d)\n", vg_err);
+                return vg_err;
             }
-            else {
-                vg_lite_translate(SPACE_HX, 0, &tmatrix);
+            /* Render a glyph as polyline shape */
+            vg_err = vg_lite_draw(rt, &glyph->handle,
+                        VG_LITE_FILL_EVEN_ODD,
+                        &tmatrix,
+                        VG_LITE_BLEND_NONE,
+                        ARGB_2_VGLITE_COLOR(td->text_color));
+            if (vg_err) {
+                PRINTF("Error: vg_lite_draw() returned error %d\r\n", vg_err);
+                return vg_err;
             }
+
+            /* Update matrix with adv parameters */
+            vg_lite_translate(glyph->hx, 0, &tmatrix);
+        }
+        else {
+            vg_lite_translate(SPACE_HX, 0, &tmatrix);
         }
     }
 
@@ -511,82 +509,105 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 
     if (rt == NULL || layer == NULL || transform_matrix == NULL)
         return VG_LITE_INVALID_ARGUMENT;
-
-    for (int i = 0; i < layer->img_info->path_count; i++) {
+    /* 'i' tracks the number of shape paths, while 't_idx' tracks the number of text paths */
+    int i = 0, t_idx = 0;
+    for (int idx = 0; idx < layer->img_info->drawable_count; idx++) {
 		vg_lite_matrix_t tmatrix;
+        char type = layer->img_info->render_sequence[idx];
 
-		mat_mult(&tmatrix, &layer->img_info->transform[i * matrix_size_in_float], transform_matrix);
-	  for (int k=0; k<2; k++) {
-		  if (NO_FILL_MODE == layer->mode->hybridPath[2 * i + k].fillType)
-			  continue;
+        switch ((svg_node_t)type) {
+            case eRectNode:
+            case eCircleNode:
+            case eEllipseNode:
+            case eLineNode:
+            case ePolylineNode:
+            case ePolygonNode:
+            case ePathNode:
+                mat_mult(&tmatrix, &layer->img_info->transform[i * matrix_size_in_float], transform_matrix);
+                for (int k=0; k<2; k++) {
+                    if (NO_FILL_MODE == layer->mode->hybridPath[2 * i + k].fillType)
+                        continue;
 
-		error = vg_lite_set_path_type(&layer->handle[i], layer->mode->hybridPath[2 * i + k].pathType);
-		if (error != VG_LITE_SUCCESS) {
-			PRINTF("\r\nERROR: Invalid path type!\r\n\r\n");
-			return error;
-		}
+                    error = vg_lite_set_path_type(&layer->handle[i], layer->mode->hybridPath[2 * i + k].pathType);
+                    if (error != VG_LITE_SUCCESS) {
+                        PRINTF("\r\nERROR: Invalid path type!\r\n\r\n");
+                        return error;
+                    }
 
-		switch (layer->mode->hybridPath[2 * i+k].fillType) {
-		case STROKE:
-		case FILL_CONSTANT:
-			error = vg_lite_draw(rt, &layer->handle[i],
-					layer->mode->fillRule[i],
-					&tmatrix,
-					VG_LITE_BLEND_NONE,
-					ARGB_2_VGLITE_COLOR(layer->color[i]));
-			if (error) {
-				PRINTF("Error: vg_lite_draw() returned error %d\r\n", error);
-				return error;
-			}
-			break;
-		case FILL_LINEAR_GRAD:
-			error = gradient_cache_find(layer->mode->linearGrads[i],
-					eLinearGradientCacheEntry,
-					&tmatrix,
-					&cachedGradient);
-			if (error != VG_LITE_SUCCESS)
-				continue;
-			if (cachedGradient == NULL) {
-				PRINTF("Error: Failed to get cached linear gradient. Please increase MAX_GRADIENT_CACHE.\n");
-				return VG_LITE_OUT_OF_MEMORY;
-			}
+                    switch (layer->mode->hybridPath[2 * i+k].fillType) {
+                    case STROKE:
+                    case FILL_CONSTANT:
+                        error = vg_lite_draw(rt, &layer->handle[i],
+                                layer->mode->fillRule[i],
+                                &tmatrix,
+                                VG_LITE_BLEND_NONE,
+                                ARGB_2_VGLITE_COLOR(layer->color[i]));
+                        if (error) {
+                            PRINTF("Error: vg_lite_draw() returned error %d\r\n", error);
+                            return error;
+                        }
+                        break;
+                    case FILL_LINEAR_GRAD:
+                        error = gradient_cache_find(layer->mode->linearGrads[i],
+                                eLinearGradientCacheEntry,
+                                &tmatrix,
+                                &cachedGradient);
+                        if (error != VG_LITE_SUCCESS)
+                            continue;
+                        if (cachedGradient == NULL) {
+                            PRINTF("Error: Failed to get cached linear gradient. Please increase MAX_GRADIENT_CACHE.\n");
+                            return VG_LITE_OUT_OF_MEMORY;
+                        }
 
-			error = vg_lite_draw_linear_gradient(rt, &layer->handle[i],
-					layer->mode->fillRule[i], &tmatrix,
-					&cachedGradient->grad_data.lg.lGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
-			if (error != VG_LITE_SUCCESS)
-				return error;
-			break;
-		case FILL_RADIAL_GRAD:
-			error = gradient_cache_find(layer->mode->radialGrads[i],
-					eRadialGradientCacheEntry,
-					&tmatrix,
-					&cachedGradient);
-			if (error != VG_LITE_SUCCESS)
-				return error;
-			if (cachedGradient == NULL) {
-				PRINTF("Error: Failed to get cached radial gradient. Please increase MAX_GRADIENT_CACHE.\n");
-				return VG_LITE_OUT_OF_MEMORY;
-			}
+                        error = vg_lite_draw_linear_gradient(rt, &layer->handle[i],
+                                layer->mode->fillRule[i], &tmatrix,
+                                &cachedGradient->grad_data.lg.lGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
+                        if (error != VG_LITE_SUCCESS)
+                            return error;
+                        break;
+                    case FILL_RADIAL_GRAD:
+                        error = gradient_cache_find(layer->mode->radialGrads[i],
+                                eRadialGradientCacheEntry,
+                                &tmatrix,
+                                &cachedGradient);
+                        if (error != VG_LITE_SUCCESS)
+                            return error;
+                        if (cachedGradient == NULL) {
+                            PRINTF("Error: Failed to get cached radial gradient. Please increase MAX_GRADIENT_CACHE.\n");
+                            return VG_LITE_OUT_OF_MEMORY;
+                        }
 
-			error = vg_lite_draw_radial_gradient(rt, &layer->handle[i],
-					layer->mode->fillRule[i], &tmatrix,
-					&cachedGradient->grad_data.rg.rGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
-			if (error != VG_LITE_SUCCESS)
-				return error;
-			break;
-		default:
-			return VG_LITE_INVALID_ARGUMENT;
-		}
-	  }
+                        error = vg_lite_draw_radial_gradient(rt, &layer->handle[i],
+                                layer->mode->fillRule[i], &tmatrix,
+                                &cachedGradient->grad_data.rg.rGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
+                        if (error != VG_LITE_SUCCESS)
+                            return error;
+                        break;
+                    default:
+                        return VG_LITE_INVALID_ARGUMENT;
+                    }
+                }
+                i++;
+                break;
+
+            case eTextNode:
+                error = layer_draw_text(rt, layer, transform_matrix, t_idx);
+                if (error != VG_LITE_SUCCESS)
+                    return error;
+                t_idx++;
+                break;
+
+            case eImageNode:
+                error = layer_draw_images(rt, layer);
+                if (error != VG_LITE_SUCCESS)
+                    return error;
+                break;
+
+            default:
+                PRINTF("Error: Unknown node type %d\r\n", type);
+                return VG_LITE_INVALID_ARGUMENT;
+        }
     }
-    error = layer_draw_images(rt, layer);
-    if (error != VG_LITE_SUCCESS)
-        return error;
-
-    error = layer_draw_text(rt, layer, transform_matrix);
-    if (error != VG_LITE_SUCCESS)
-        return error;
 
     vg_lite_finish();
 

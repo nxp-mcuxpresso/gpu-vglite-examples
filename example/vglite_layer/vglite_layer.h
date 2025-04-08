@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 NXP
+ * Copyright 2024-2025 NXP
  * All rights reserved.
  *
  * SPDX-License-Identifier: BSD-3-Clause
@@ -21,6 +21,19 @@
 
 #ifndef IMAGE_BUF_DATA_H
 #define IMAGE_BUF_DATA_H
+
+typedef enum {
+    eTextNode,
+    eRectNode,
+    eCircleNode,
+    eEllipseNode,
+    eLineNode,
+    ePolylineNode,
+    ePolygonNode,
+    ePathNode,
+    eImageNode,
+    eUnknownNode  // Add a fallback enum value
+} svg_node_t;
 
 typedef struct image_buf_data {
     int16_t img_width;
@@ -107,9 +120,11 @@ typedef struct svg_text_info {
 
 typedef struct image_info {
     char *image_name;
+    svg_node_t *render_sequence;
     int  image_size[2];
     vg_lite_format_t data_format;
     float *transform;
+    int drawable_count;
     int path_count;
     stroke_info_t *stroke_info;
     svg_text_info_t *text_info;
