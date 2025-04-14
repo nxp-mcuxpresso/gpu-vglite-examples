@@ -22,6 +22,7 @@
 
 /* GLobals */
 static gradient_cache_entry_t *g_grad_cache = NULL;
+static vg_lite_uint32_t g_chip_id;
 #define MAX_FONT_CACHE_SZ (27*2)
 typedef struct font_glyph_cache_entry {
     uint16_t u16;
@@ -107,15 +108,48 @@ void gradient_cache_free(void)
     if (g_grad_cache != NULL) {
         for (i = 0; i < MAX_GRADIENT_CACHE; i++) {
             if (g_grad_cache[i].g != NULL) {
-                if (g_grad_cache[i].type == eLinearGradientCacheEntry) {
+                if (g_grad_cache[i].type == eLinearGradientCacheEntry && g_chip_id != 0x255) {
                     vg_lite_clear_linear_grad(&g_grad_cache[i].grad_data.lg.lGradient);
-                } else if (g_grad_cache[i].type == eRadialGradientCacheEntry) {
+                } else if (g_grad_cache[i].type == eRadialGradientCacheEntry && g_chip_id != 0x255) {
                     vg_lite_clear_radial_grad(&g_grad_cache[i].grad_data.rg.rGradient);
-		}
+                } else if(g_grad_cache[i].type == eLinearGradientCacheEntry && g_chip_id == 0x255){
+                    vg_lite_clear_grad(&g_grad_cache[i].grad_data.linear_basic.basic_gradient);
+                }
             }
         }
         vPortFree(g_grad_cache);
         g_grad_cache = NULL;
+    }
+}
+
+static vg_lite_error_t get_gpu_chip_info(void)
+{
+    vg_lite_uint32_t chip_rev = 0;
+
+    // Get product info and pass g_chip_id as a pointer
+    vg_lite_get_product_info(NULL, &g_chip_id, &chip_rev);
+
+    // Check g_chip_id for supported values (0x255, 0x355, 0x555)
+    if (g_chip_id == 0x255 || g_chip_id == 0x355 || g_chip_id == 0x555) {
+        return VG_LITE_SUCCESS;
+    } else {
+        // Print error messages for mismatch
+        printf("\r\nVGLite API initialization Error!!! \nHardware ChipId: 0x%X \r\n\r\n", g_chip_id);
+        printf("\r\nNOT match vg_lite_options.h CHIPID: 0x%X\r\n\r\n", g_chip_id);
+        return VG_LITE_NOT_SUPPORT;
+    }
+}
+
+
+// Updated function to prepare colors/stops for legacy API
+static void prepare_legacy_gradient_data(const vg_lite_color_ramp_t *ramp, int count,
+                                       vg_lite_uint32_t *colors, vg_lite_uint32_t *stops) {
+    for (int i = 0; i < count; i++) {
+        stops[i] = (vg_lite_uint32_t)(ramp[i].stop * 255.0f);
+        colors[i] = ((uint32_t)(ramp[i].alpha * 255.0f) << 24) |
+                   ((uint32_t)(ramp[i].red * 255.0f) << 16) |
+                   ((uint32_t)(ramp[i].green * 255.0f) << 8) |
+                   (uint32_t)(ramp[i].blue * 255.0f);
     }
 }
 
@@ -136,7 +170,7 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
 {
 	int unused_idx;
     int i;
-    vg_lite_error_t error;
+    vg_lite_error_t error=0;
     gradient_cache_entry_t *cachedGradient = NULL;
 
     /* Reset output pointer to NULL by default, indicating cache search failed. */
@@ -172,14 +206,19 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
 
 	cachedGradient = &g_grad_cache[unused_idx];
 	/* Release memory of last gradient */
-	if(cachedGradient->type == eLinearGradientCacheEntry){
+	if(cachedGradient->type == eLinearGradientCacheEntry && g_chip_id != 0x255){
 		vg_lite_clear_linear_grad(&cachedGradient->grad_data.lg.lGradient);
-	} else if(cachedGradient->type == eRadialGradientCacheEntry){
+	} else if(cachedGradient->type == eRadialGradientCacheEntry && g_chip_id != 0x255){
 		vg_lite_clear_radial_grad(&cachedGradient->grad_data.rg.rGradient);
-	}
+	} else if(cachedGradient->type == eLinearGradientCacheEntry && g_chip_id == 0x255){
+        vg_lite_clear_grad(&cachedGradient->grad_data.linear_basic.basic_gradient);
+    }
+
+	vg_lite_uint32_t colors[MAX_GRADIENT_STOP_POINTS];
+	vg_lite_uint32_t stops[MAX_GRADIENT_STOP_POINTS];
 
 	/* Allocate and cache requested gradient descriptor */
-	if(type == eLinearGradientCacheEntry){
+	if(type == eLinearGradientCacheEntry && g_chip_id != 0x255){
 		linearGradient_t *gradient = (linearGradient_t *)grad;
 
 		_gradient_stop_color_to_vglite_color(
@@ -202,7 +241,7 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
                     cachedGradient->grad_data.lg.lGradient.matrix = *transform_matrix;
                     error = vg_lite_update_linear_grad(&cachedGradient->grad_data.lg.lGradient);
                 }
-	} else if(type == eRadialGradientCacheEntry){
+	} else if(type == eRadialGradientCacheEntry && g_chip_id != 0x255){
 		radialGradient_t *gradient = (radialGradient_t *)grad;
 
 		_gradient_stop_color_to_vglite_color(
@@ -226,7 +265,38 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
                     cachedGradient->grad_data.rg.rGradient.matrix = *transform_matrix;
                     error = vg_lite_update_rad_grad(&cachedGradient->grad_data.rg.rGradient);
                 }
-	}
+	} else if(type == eLinearGradientCacheEntry && g_chip_id == 0x255){
+		linearGradient_t *gradient = (linearGradient_t*)grad;
+
+		memset(&cachedGradient->grad_data.linear_basic.basic_gradient, 0, sizeof(vg_lite_linear_gradient_t));
+		error = vg_lite_init_grad(&cachedGradient->grad_data.linear_basic.basic_gradient);
+		if (error) {
+			PRINTF("\r\nERROR: vg_lite_init_grad() failed (err=%d)!\r\n\r\n", error);
+			return error;
+		}
+		_gradient_stop_color_to_vglite_color(gradient->num_stop_points, gradient->stops, cachedGradient->vgColorRamp);
+
+		// Prepare data for legacy API
+		prepare_legacy_gradient_data(cachedGradient->vgColorRamp,
+                                gradient->num_stop_points,
+                                colors, stops);
+
+
+		// Setup legacy linear_basic gradient
+		cachedGradient->grad_data.linear_basic.basic_gradient.count = gradient->num_stop_points;
+		error = vg_lite_set_grad(&cachedGradient->grad_data.linear_basic.basic_gradient,
+				cachedGradient->grad_data.linear_basic.basic_gradient.count, colors,
+				stops);
+		if (error != VG_LITE_SUCCESS)
+			return error;
+
+		if (is_matrix_identical(&cachedGradient->grad_data.linear_basic.basic_gradient.matrix, transform_matrix) == 0) {
+			cachedGradient->grad_data.linear_basic.basic_gradient.matrix = *transform_matrix;
+			error = vg_lite_update_grad(&cachedGradient->grad_data.linear_basic.basic_gradient);
+		}
+	} else if(type == eRadialGradientCacheEntry && g_chip_id == 0x255){
+		PRINTF("Error: Radial gradient is not supported for ChipId: 0x%X\r\n", g_chip_id);
+    }
 
 	if (error != VG_LITE_SUCCESS)
 		return error;
@@ -509,6 +579,12 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 
     if (rt == NULL || layer == NULL || transform_matrix == NULL)
         return VG_LITE_INVALID_ARGUMENT;
+
+    vg_lite_error_t status = get_gpu_chip_info();
+    if (status == VG_LITE_NOT_SUPPORT) {
+        return VG_LITE_NOT_SUPPORT;
+    }
+
     /* 'i' tracks the number of shape paths, while 't_idx' tracks the number of text paths */
     int i = 0, t_idx = 0;
     for (int idx = 0; idx < layer->img_info->drawable_count; idx++) {
@@ -555,13 +631,20 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
                         if (error != VG_LITE_SUCCESS)
                             continue;
                         if (cachedGradient == NULL) {
-                            PRINTF("Error: Failed to get cached linear gradient. Please increase MAX_GRADIENT_CACHE.\n");
+                            PRINTF("Error: Failed to get cached linear gradient. Please increase MAX_GRADIENT_CACHE.\r\n");
                             return VG_LITE_OUT_OF_MEMORY;
                         }
 
-                        error = vg_lite_draw_linear_gradient(rt, &layer->handle[i],
-                                layer->mode->fillRule[i], &tmatrix,
-                                &cachedGradient->grad_data.lg.lGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
+                        if(g_chip_id == 0x255){
+                            error = vg_lite_draw_gradient(rt, &layer->handle[i],
+                            layer->mode->fillRule[i], &tmatrix,
+                            &cachedGradient->grad_data.linear_basic.basic_gradient, VG_LITE_BLEND_NONE);
+
+                        } else{
+                            error = vg_lite_draw_linear_gradient(rt, &layer->handle[i],
+                            layer->mode->fillRule[i], &tmatrix,
+                            &cachedGradient->grad_data.lg.lGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
+                        }
                         if (error != VG_LITE_SUCCESS)
                             return error;
                         break;
@@ -576,10 +659,12 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
                             PRINTF("Error: Failed to get cached radial gradient. Please increase MAX_GRADIENT_CACHE.\n");
                             return VG_LITE_OUT_OF_MEMORY;
                         }
-
-                        error = vg_lite_draw_radial_gradient(rt, &layer->handle[i],
+                        if (g_chip_id != 0x255){
+                            error = vg_lite_draw_radial_gradient(rt, &layer->handle[i],
                                 layer->mode->fillRule[i], &tmatrix,
                                 &cachedGradient->grad_data.rg.rGradient, 0, VG_LITE_BLEND_NONE, VG_LITE_FILTER_LINEAR);
+                        }
+
                         if (error != VG_LITE_SUCCESS)
                             return error;
                         break;

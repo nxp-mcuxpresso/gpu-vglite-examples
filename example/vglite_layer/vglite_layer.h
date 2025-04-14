@@ -191,6 +191,9 @@ typedef struct gradient_cache_entry {
             vg_lite_radial_gradient_t rGradient;
             vg_lite_radial_gradient_parameter_t params;
         } rg;
+        struct {
+            vg_lite_linear_gradient_t basic_gradient;
+        } linear_basic;
     } grad_data;
     /* Shared color ramp for both gradients */
     vg_lite_color_ramp_t vgColorRamp[MAX_GRADIENT_STOP_POINTS];
