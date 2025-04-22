@@ -45,7 +45,7 @@ typedef struct font_glyph_cache_entry {
  * Prototypes
  ******************************************************************************/
 vg_lite_error_t layer_create_image_buffers(UILayers_t *layer);
-vg_lite_error_t layer_draw_images(vg_lite_buffer_t *rt, UILayers_t *layer);
+vg_lite_error_t layer_draw_images(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix);
 vg_lite_error_t layer_free_images(UILayers_t *layer);
 
 static uint32_t ARGB_2_VGLITE_COLOR(uint32_t x)
@@ -367,16 +367,19 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
     return VG_LITE_SUCCESS;
 }
 
-vg_lite_error_t layer_draw_images(vg_lite_buffer_t *rt, UILayers_t *layer)
+vg_lite_error_t layer_draw_images(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix)
 {
     vg_lite_error_t error;
+    vg_lite_matrix_t tmatrix;
 
     for (int j=0; j<layer->img_info->image_count; j++)
     {
         image_buf_data_t * raw_img = layer->img_info->raw_images[j];
-
-        error = vg_lite_blit(rt, &layer->dst_images[j], &raw_img->matrix,
-            VG_LITE_BLEND_NONE, 0, VG_LITE_FILTER_BI_LINEAR);
+        tmatrix = raw_img->matrix;
+        tmatrix.m[0][2] += transform_matrix->m[0][2];
+        tmatrix.m[1][2] += transform_matrix->m[1][2];
+        error = vg_lite_blit(rt, &layer->dst_images[j], &tmatrix,
+                    VG_LITE_BLEND_NONE, 0, VG_LITE_FILTER_BI_LINEAR);
         if (error != VG_LITE_SUCCESS) {
             PRINTF("Error: vg_lite_blit() failed! %d\r\n", error);
             return error;
@@ -534,7 +537,9 @@ int layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *t
     td   = &ti->text_strings[i];
     font = td->font_face;
 
-    mat_mult(&tmatrix, &td->tmatrix[i * matrix_size_in_float], transform_matrix);
+    tmatrix = *(vg_lite_matrix_t *) &td->tmatrix[i * matrix_size_in_float];
+    tmatrix.m[0][2] += transform_matrix->m[0][2];
+    tmatrix.m[1][2] += transform_matrix->m[1][2];
     vg_lite_translate(td->x, td->y, &tmatrix);
 
     float font_scale_factor = (float)td->font_size/font->units_per_em;
@@ -599,7 +604,9 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
             case ePolylineNode:
             case ePolygonNode:
             case ePathNode:
-                mat_mult(&tmatrix, &layer->img_info->transform[i * matrix_size_in_float], transform_matrix);
+                tmatrix = *(vg_lite_matrix_t *) &layer->img_info->transform[i * matrix_size_in_float];
+                tmatrix.m[0][2] += transform_matrix->m[0][2];
+                tmatrix.m[1][2] += transform_matrix->m[1][2];
                 for (int k=0; k<2; k++) {
                     if (NO_FILL_MODE == layer->mode->hybridPath[2 * i + k].fillType)
                         continue;
@@ -683,7 +690,7 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
                 break;
 
             case eImageNode:
-                error = layer_draw_images(rt, layer);
+                error = layer_draw_images(rt, layer, transform_matrix);
                 if (error != VG_LITE_SUCCESS)
                     return error;
                 break;
