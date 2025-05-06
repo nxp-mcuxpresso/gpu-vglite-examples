@@ -45,6 +45,7 @@ examples_path_vector_freertos="$2/vector_freertos"
 examples_path_tiled_freertos="$2/tiled_freertos"
 examples_path_clock_freertos="$2/cube_freertos"
 examples_path_cube_freertos="$2/clock_freertos"
+examples_path_toolkit_freertos="$2/toolkit_freertos"
 examples_path_decompress_etc2_freertos="$2/decompress_etc2_freertos"
 
 ./build_script.sh  ${examples_path_tiger_freertos} tiger_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
@@ -52,6 +53,7 @@ examples_path_decompress_etc2_freertos="$2/decompress_etc2_freertos"
 ./build_script.sh  ${examples_path_tiled_freertos} tiled_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
 ./build_script.sh  ${examples_path_clock_freertos} cube_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
 ./build_script.sh  ${examples_path_cube_freertos} clock_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
+./build_script.sh  ${examples_path_toolkit_freertos} toolkit_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
 if [ "$1" = "mimxrt700evk" ]; then
   ./build_script.sh  ${examples_path_decompress_etc2_freertos} decompress_etc2_freertos ${deb} ${rel} ${flash_deb} ${flash_rel} $1 ${core} $3
 fi
