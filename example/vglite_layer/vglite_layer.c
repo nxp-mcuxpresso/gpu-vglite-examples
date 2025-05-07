@@ -514,7 +514,7 @@ int layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *t
     svg_text_string_data_t *td = NULL;
     font_info_t *font = NULL;
     vg_lite_matrix_t tmatrix;
-    uint32_t text_data_size;
+    uint32_t text_data_size = 0;
 
     td   = &ti->text_strings[i];
     font = td->font_face;
