@@ -59,23 +59,6 @@ static uint32_t ARGB_2_VGLITE_COLOR(uint32_t x)
 	return TRANSPARENT_VGLITE_COLOUR(a, r, g, b);
 }
 
-/*  Perform 2D matrix multiplication */
-static void mat_mult(vg_lite_matrix_t *mR, vg_lite_float_t *mA, vg_lite_matrix_t *mB)
-{
-    int row, column;
-
-    for (row = 0; row < 3; row++) {
-        for (column = 0; column < 3; column++) {
-            mR->m[row][column] =  (mA[row*3 + 0] * mB->m[0][column])
-            + (mA[row*3 + 1] * mB->m[1][column])
-            + (mA[row*3 + 2] * mB->m[2][column]);
-        }
-    }
-    mR->scaleX  = mB->scaleX;
-    mR->scaleY  = mB->scaleY;
-    mR->angle   = mB->angle;
-}
-
 static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
 {
     int row;
@@ -316,7 +299,6 @@ vg_lite_error_t layer_create_image_buffers(UILayers_t *layer)
     if (image_count > 0) {
         qoi_desc desc;
         int channels = 4;
-        uint8_t *decomp_data;
 
         layer->dst_images = (vg_lite_buffer_t*) pvPortMalloc(image_count * sizeof(vg_lite_buffer_t));
         if (layer->dst_images == NULL) {
