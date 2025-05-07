@@ -9,6 +9,7 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "stdio.h"
 #include "fsl_debug_console.h"
 #include "pin_mux.h"
 #include "board.h"
