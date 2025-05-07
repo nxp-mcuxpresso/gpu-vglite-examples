@@ -19,6 +19,7 @@
 #define QOI_MALLOC(sz) pvPortMalloc(sz)
 #define QOI_FREE(p)    vPortFree(p)
 #define QOI_IMPLEMENTATION
+#define QOI_NO_STDIO
 #include "qoi.h"
 
 /* GLobals */
