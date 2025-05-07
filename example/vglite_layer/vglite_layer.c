@@ -77,7 +77,7 @@ static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
     return 1;
 }
 
-int gradient_cache_init(void)
+vg_lite_error_t gradient_cache_init(void)
 {
     g_grad_cache = (gradient_cache_entry_t*) pvPortMalloc(MAX_GRADIENT_CACHE * sizeof(gradient_cache_entry_t));
     if (g_grad_cache == NULL) {
@@ -85,6 +85,7 @@ int gradient_cache_init(void)
         return VG_LITE_OUT_OF_MEMORY;
     }
     memset(g_grad_cache, 0, MAX_GRADIENT_CACHE * sizeof(g_grad_cache));
+
     return VG_LITE_SUCCESS;
 }
 
@@ -152,11 +153,11 @@ void _gradient_stop_color_to_vglite_color(int32_t num_stop_points, stopValue_t *
 	}
 }
 
-int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry)
+vg_lite_error_t gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry)
 {
 	int unused_idx;
     int i;
-    vg_lite_error_t error=0;
+    vg_lite_error_t error = VG_LITE_SUCCESS;
     gradient_cache_entry_t *cachedGradient = NULL;
 
     /* Reset output pointer to NULL by default, indicating cache search failed. */
@@ -288,7 +289,7 @@ int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix
 		return error;
 
 	cachedGradient->g = grad;
-	cachedGradient->type = type;
+	cachedGradient->type = (GradientCacheEntry_t)type;;
 
 	*ppcachedEntry = cachedGradient;
 	return VG_LITE_SUCCESS;
@@ -415,7 +416,7 @@ vg_lite_error_t layer_free_images(UILayers_t *layer)
 
 static font_glyph_cache_entry_t *g_font_glyph_cache = NULL;
 
-int layer_font_glyph_cache_init(void)
+vg_lite_error_t layer_font_glyph_cache_init(void)
 {
     g_font_glyph_cache = pvPortMalloc(sizeof(font_glyph_cache_entry_t)*MAX_FONT_CACHE_SZ);
     if (g_font_glyph_cache == NULL) {
@@ -435,7 +436,7 @@ int layer_font_glyph_cache_free(void)
     return VG_LITE_SUCCESS;
 }
 
-int layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, font_glyph_cache_entry_t **handle, uint32_t text_data_size)
+vg_lite_error_t layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, font_glyph_cache_entry_t **handle, uint32_t text_data_size)
 {
     vg_lite_error_t vg_err = VG_LITE_SUCCESS;
     int gIdx = -1, cacheIdx = -1, i = 0;
@@ -507,7 +508,7 @@ int layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, font_glyph_ca
     return VG_LITE_SUCCESS;
 }
 
-int layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix, int i)
+vg_lite_error_t layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transform_matrix, int i)
 {
     svg_text_info_t *ti = layer->img_info->text_info;
     vg_lite_error_t vg_err = VG_LITE_SUCCESS;
@@ -776,7 +777,7 @@ int layer_init(UILayers_t *layer)
         return VG_LITE_SUCCESS;
 }
 
-int layer_free(UILayers_t *layer)
+vg_lite_error_t layer_free(UILayers_t *layer)
 {
     if (layer == NULL)
         return VG_LITE_INVALID_ARGUMENT;

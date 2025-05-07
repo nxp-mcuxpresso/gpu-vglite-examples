@@ -255,7 +255,7 @@ int layer_init(UILayers_t *layer);
  * \retcode VG_LITE_INVALID_ARGUMENT - if any arguments are invalid
  * \retcode -1 - For any other errror
  */
-int layer_free(UILayers_t *layer);
+vg_lite_error_t layer_free(UILayers_t *layer);
 
 /**
  * gradient_cache_init()
@@ -269,7 +269,7 @@ int layer_free(UILayers_t *layer);
  * \retcode VG_LITE_SUCCESS - on successful rendering
  * \retcode VG_LITE_OUT_OF_MEMORY - if there is insufficient memory
  */
-int gradient_cache_init(void);
+vg_lite_error_t gradient_cache_init(void);
 
 /**
  * gradient_cache_init()
@@ -294,5 +294,5 @@ void gradient_cache_free(void);
  * \retcode VG_LITE_SUCCESS - in case of success
  * \retcode VG_LITE_OUT_OF_MEMORY - if gradient allocation fails.
  */
-int gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry);
+vg_lite_error_t gradient_cache_find(void *grad, int type, vg_lite_matrix_t *transform_matrix, gradient_cache_entry_t **ppcachedEntry);
 
