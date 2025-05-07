@@ -60,7 +60,7 @@ typedef struct path_info {
     uint32_t  path_length;
     int32_t  *path_data;
     float bounding_box[4];
-    uint32_t *path_args;
+    int32_t *path_args;
     uint8_t *path_cmds;
     uint8_t end_path_flag;
 } path_info_t;
@@ -68,7 +68,7 @@ typedef struct path_info {
 typedef struct glyph_info {
     uint32_t  path_length;
     int32_t  *path_data;
-    uint32_t *path_args;
+    int32_t *path_args;
     uint8_t *path_cmds;
     uint8_t end_path_flag;
     int hx;
