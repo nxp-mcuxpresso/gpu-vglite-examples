@@ -17,6 +17,7 @@
 
 
 #define QOI_MALLOC(sz) pvPortMalloc(sz)
+#define QOI_FREE(p)    vPortFree(p)
 #define QOI_IMPLEMENTATION
 #include "qoi.h"
 
