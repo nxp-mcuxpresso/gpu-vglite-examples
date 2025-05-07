@@ -196,8 +196,8 @@ void init_graphic_assets()
     int ret = 0;
     vg_lite_error_t error;
 
-    win_cx = window.width / 2.0f;
-    win_cy = window.height / 2.0f;
+    win_cx = (int)(window.width / 2.0f);
+    win_cy = (int)(window.height / 2.0f);
 
     vg_lite_identity(&g_transform_matrix);
     vg_lite_translate(
