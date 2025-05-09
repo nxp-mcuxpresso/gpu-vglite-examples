@@ -56,8 +56,11 @@ volatile bool s_frameDone = false;
 /* On RT595S */
 #if defined(CPU_MIMXRT595SFFOC_cm33) || defined(CPU_MIMXRT798SGFOA_cm33_core0)
 #define VGLITE_HEAP_SZ 0x100000 /* 1 MB */
-/* On RT1170 */
-#elif defined(CPU_MIMXRT1176DVMAA_cm7) || defined(CPU_MIMXRT1166DVM6A_cm7)
+/* On RT1170 / RT1160 */
+#elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
+      defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
+      defined(MIMXRT1171_SERIES)     || defined(MIMXRT1166_cm7_SERIES) || \
+      defined(MIMXRT1165_cm7_SERIES)
 #define VGLITE_HEAP_SZ 8912896 /* 8.5 MB */
 #else
 #error "Unsupported CPU !"
@@ -72,8 +75,11 @@ volatile bool s_frameDone = false;
 #elif defined(CPU_MIMXRT798SGFOA_cm33_core0)
 /* Tessellation window = 720 x 640 */
 #define TH 640
-/* On RT1170 */
-#elif defined(CPU_MIMXRT1176DVMAA_cm7) || defined(CPU_MIMXRT1166DVM6A_cm7)
+/* On RT1170 / RT1160 */
+#elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
+      defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
+      defined(MIMXRT1171_SERIES)     || defined(MIMXRT1166_cm7_SERIES) || \
+      defined(MIMXRT1165_cm7_SERIES)
 /* Tessellation window = 720 x 1280 */
 #define TH 1280
 #else

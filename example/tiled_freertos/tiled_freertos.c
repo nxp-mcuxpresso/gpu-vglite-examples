@@ -27,7 +27,10 @@
 #define TILED_BUFFER1_ADDR 0x60400000U
 #elif defined(CPU_MIMXRT595SFFOC_cm33)
 #define TILED_BUFFER1_ADDR 0x28400000U
-#elif defined(CPU_MIMXRT1176DVMAA_cm7) || defined(CPU_MIMXRT1166DVM6A_cm7)
+#elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
+      defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
+      defined(MIMXRT1171_SERIES)     || defined(MIMXRT1166_cm7_SERIES) || \
+      defined(MIMXRT1165_cm7_SERIES)
 #define TILED_BUFFER1_ADDR 0x80400000U
 #else
 #error "Unsupported CPU"
