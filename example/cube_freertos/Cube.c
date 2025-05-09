@@ -23,7 +23,7 @@
 
 #include "fsl_gpio.h"
 #include "display_support.h"
-#if defined(CPU_MIMXRT798SGFOA_cm33_core0)
+#if defined(MIMXRT798S_cm33_core0_SERIES)
 #include "fsl_lcdif.h"
 #endif
 
@@ -49,7 +49,7 @@ static vg_lite_window_t window;
 #else
 #define VGLITE_COMMAND_BUFFER_SZ (64 * 1024)
 /* On RT595S */
-#if defined(CPU_MIMXRT595SFFOC_cm33) || defined(CPU_MIMXRT798SGFOA_cm33_core0)
+#if defined(MIMXRT595S_cm33_SERIES) || defined(MIMXRT798S_cm33_core0_SERIES)
 #define VGLITE_HEAP_SZ 0x400000 /* 4 MB */
 /* On RT1170 / RT1160 */
 #elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
@@ -63,7 +63,7 @@ static vg_lite_window_t window;
 #if (720 * 1280 == (DEMO_PANEL_WIDTH) * (DEMO_PANEL_HEIGHT))
 #define TW 720
 /* On RT595S */
-#if defined(CPU_MIMXRT595SFFOC_cm33) || defined(CPU_MIMXRT798SGFOA_cm33_core0)
+#if defined(MIMXRT595S_cm33_SERIES) || defined(MIMXRT798S_cm33_core0_SERIES)
 /* Tessellation window = 720 x 640 */
 #define TH 640
 /* On RT1170 / RT1160 */

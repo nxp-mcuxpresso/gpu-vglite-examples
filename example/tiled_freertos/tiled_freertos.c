@@ -23,9 +23,9 @@
  ******************************************************************************/
 
 #define DEFAULT_SIZE       256.0f;
-#if defined(CPU_MIMXRT798SGFOA_cm33_core0)
+#if defined(MIMXRT798S_cm33_core0_SERIES)
 #define TILED_BUFFER1_ADDR 0x60400000U
-#elif defined(CPU_MIMXRT595SFFOC_cm33)
+#elif defined(MIMXRT595S_cm33_SERIES)
 #define TILED_BUFFER1_ADDR 0x28400000U
 #elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
       defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
