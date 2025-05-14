@@ -62,6 +62,25 @@ static uint32_t ARGB_2_VGLITE_COLOR(uint32_t x)
 	return TRANSPARENT_VGLITE_COLOUR(a, r, g, b);
 }
 
+void matrix_multiply(vg_lite_matrix_t *result, const vg_lite_matrix_t *mat1, const vg_lite_matrix_t *mat2) {
+    int row, col, k;
+
+    // Only compute the top two rows (0 and 1) for 2D affine transform
+    for (row = 0; row < 2; row++) {
+        for (col = 0; col < 3; col++) {
+            result->m[row][col] = 0.0f;
+            for (k = 0; k < 3; k++) {
+                result->m[row][col] += mat1->m[row][k] * mat2->m[k][col];
+            }
+        }
+    }
+
+    // Set the fixed bottom row for 2D affine transform
+    result->m[2][0] = 0.0f;
+    result->m[2][1] = 0.0f;
+    result->m[2][2] = 1.0f;
+}
+
 static int is_matrix_identical(vg_lite_matrix_t * m1, vg_lite_matrix_t * m2)
 {
     int row;
@@ -361,9 +380,7 @@ vg_lite_error_t layer_draw_images(vg_lite_buffer_t *rt, UILayers_t *layer, vg_li
     for (int j=0; j<layer->img_info->image_count; j++)
     {
         image_buf_data_t * raw_img = layer->img_info->raw_images[j];
-        tmatrix = raw_img->matrix;
-        tmatrix.m[0][2] += transform_matrix->m[0][2];
-        tmatrix.m[1][2] += transform_matrix->m[1][2];
+        matrix_multiply(&tmatrix, transform_matrix, &raw_img->matrix);
         error = vg_lite_blit(rt, &layer->dst_images[j], &tmatrix,
                     VG_LITE_BLEND_NONE, 0, VG_LITE_FILTER_BI_LINEAR);
         if (error != VG_LITE_SUCCESS) {
@@ -522,10 +539,8 @@ vg_lite_error_t layer_draw_text(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite
 
     td   = &ti->text_strings[i];
     font = td->font_face;
+    matrix_multiply(&tmatrix, transform_matrix, (const vg_lite_matrix_t *)&td->tmatrix[i * matrix_size_in_float]);
 
-    tmatrix = *(vg_lite_matrix_t *) &td->tmatrix[i * matrix_size_in_float];
-    tmatrix.m[0][2] += transform_matrix->m[0][2];
-    tmatrix.m[1][2] += transform_matrix->m[1][2];
     vg_lite_translate(td->x, td->y, &tmatrix);
 
     float font_scale_factor = (float)td->font_size/font->units_per_em;
@@ -590,9 +605,8 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
             case ePolylineNode:
             case ePolygonNode:
             case ePathNode:
-                tmatrix = *(vg_lite_matrix_t *) &layer->img_info->transform[i * matrix_size_in_float];
-                tmatrix.m[0][2] += transform_matrix->m[0][2];
-                tmatrix.m[1][2] += transform_matrix->m[1][2];
+                matrix_multiply(&tmatrix, transform_matrix,
+                (const vg_lite_matrix_t *)&layer->img_info->transform[i * matrix_size_in_float]);
                 for (int k=0; k<2; k++) {
                     if (NO_FILL_MODE == layer->mode->hybridPath[2 * i + k].fillType)
                         continue;

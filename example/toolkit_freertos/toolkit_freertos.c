@@ -201,15 +201,27 @@ void init_graphic_assets()
 {
     int ret = 0;
     vg_lite_error_t error;
+    static float sx, sy;
 
     win_cx = (int)(window.width / 2.0f);
     win_cy = (int)(window.height / 2.0f);
 
+    sx = (window.width / 1.5f)/(g_layers.img_info->image_size[0]);
+    sy = (window.height / 1.5f)/(g_layers.img_info->image_size[1]);
+
+    float scale = (sx < sy) ? sx : sy;
+
+    // Calculate scaled image size
+    float scaled_width = g_layers.img_info->image_size[0] * scale;
+    float scaled_height = g_layers.img_info->image_size[1] * scale;
+
+    // Calculate top-left position to center the image
+    float tx = win_cx - (scaled_width / 2.0f);
+    float ty = win_cy - (scaled_height / 2.0f);
+
     vg_lite_identity(&g_transform_matrix);
-    vg_lite_translate(
-            win_cx - g_layers.img_info->image_size[0]/2,
-            win_cy - g_layers.img_info->image_size[1]/2,
-            &g_transform_matrix);
+    vg_lite_translate(tx, ty, &g_transform_matrix);
+    vg_lite_scale(scale, scale, &g_transform_matrix);
 
     ret = layer_init(&g_layers);
     if (ret != VG_LITE_SUCCESS) {
