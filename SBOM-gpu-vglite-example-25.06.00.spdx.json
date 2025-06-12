@@ -1,0 +1,115 @@
+{
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "spdxVersion": "SPDX-2.3",
+  "creationInfo": {
+    "created": "2025-06-12T08:21:33Z",
+    "creators": [
+      "Organization: NXP"
+    ],
+    "licenseListVersion": "3.20"
+  },
+  "name": "gpu-vglite-examples-v25.06.00",
+  "dataLicense": "CC0-1.0",
+  "documentNamespace": "https://nxp.com/spdx/a595421e-9773-4316-b2d1-7c01c33efb39",
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
+      "name": "gpu-vglite-examples",
+      "versionInfo": "v25.06.00",
+      "licenseConcluded": "(BSD-3-Clause)",
+      "licenseDeclared": "(BSD-3-Clause)",
+      "downloadLocation": "https://github.com/nxp-mcuxpresso/gpu-vglite-examples",
+      "originator": "Organization: NXP",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-8e93f52d-6967-45c0-b6a6-9deca6506e23",
+      "name": "vglite",
+      "versionInfo": "v25.06.00",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "homepage": "https://github.com/nxp-mcuxpresso/gpu-vglite",
+      "downloadLocation": "https://github.com/nxp-mcuxpresso/gpu-vglite",
+      "originator": "Organization: NXP",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-08d113b3-14b4-481e-ac16-9084ee62b693",
+      "name": "FreeRTOS Real Time Kernel",
+      "versionInfo": "202111.00",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "homepage": "https://github.com/FreeRTOS/FreeRTOS",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: freertos",
+      "supplier": "NOASSERTION",
+      "externalRefs": [
+        {
+          "referenceCategory": "SECURITY",
+          "referenceLocator": "cpe:2.3:o:amazon:freertos:202111.00:*:*:*:*:*:*:*",
+          "referenceType": "cpe23Type"
+        },
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:github/FreeRTOS/FreeRTOS@202111.00",
+          "referenceType": "purl"
+        },
+        {
+          "referenceCategory": "OTHER",
+          "referenceLocator": "b6b546b4-648e-4af6-a94f-14512c155456",
+          "referenceType": "BlackDuck-ComponentOrigin"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceLocator": "cpe:2.3:o:amazon:freertos+fat:202111.00:*:*:*:*:*:*:*",
+          "referenceType": "cpe23Type"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceLocator": "cpe:2.3:a:amazon:freertos:202111.00:*:*:*:*:*:*:*",
+          "referenceType": "cpe23Type"
+        }
+      ],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-63bffc3e-6149-4ad8-96fc-3041926cca21",
+      "name": "qoi",
+      "versionInfo": "0+git20220615+ds",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "homepage": "https://github.com/phoboslab/qoi",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: qoi",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-08d113b3-14b4-481e-ac16-9084ee62b693"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-63bffc3e-6149-4ad8-96fc-3041926cca21"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
+      "relationshipType": "DYNAMIC_LINK",
+      "relatedSpdxElement": "SPDXRef-package-8e93f52d-6967-45c0-b6a6-9deca6506e23"
+    }
+  ]
+}
