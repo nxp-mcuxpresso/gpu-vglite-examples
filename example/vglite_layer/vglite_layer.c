@@ -103,7 +103,7 @@ vg_lite_error_t gradient_cache_init(void)
         PRINTF("Error: Memory allocation failed for g_grad_cache!\n");
         return VG_LITE_OUT_OF_MEMORY;
     }
-    memset(g_grad_cache, 0, MAX_GRADIENT_CACHE * sizeof(g_grad_cache));
+    memset(g_grad_cache, 0, MAX_GRADIENT_CACHE * sizeof(gradient_cache_entry_t));
 
     return VG_LITE_SUCCESS;
 }
