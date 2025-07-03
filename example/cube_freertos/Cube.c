@@ -94,8 +94,12 @@ uint32_t vglite_heap_size     = VGLITE_HEAP_SZ;
 uint32_t vglite_cmd_buff_size = VGLITE_COMMAND_BUFFER_SZ;
 #endif
 
-/* Semaphore to sync between VGlie and display */
+/* Semaphore to sync between VGLite and display */
 static SemaphoreHandle_t semaSwap;
+
+#if (USE_BUFFER_COMPRESSION == 1)
+static vg_lite_compression_info_t c_info;
+#endif
 
 /*******************************************************************************
  * Code
@@ -135,7 +139,18 @@ static vg_lite_error_t init_vg_lite(void)
         return error;
     }
     /* Initialize the window */
-    error = VGLITE_CreateWindow(&display, &window);
+#if (USE_BUFFER_COMPRESSION == 1)
+    error = VGLITE_SetCompressionInfo(&c_info);
+    if (error)
+    {
+        PRINTF("VGLITE_SetCompressionInfo failed: VGLITE_SetCompressionInfo() returned error %d\n", error);
+        cleanup();
+        return error;
+    }
+    error = VGLITE_CreateWindow(&display, &window, &c_info);
+#else
+    error = VGLITE_CreateWindow(&display, &window, NULL);
+#endif
     if (error)
     {
         PRINTF("VGLITE_CreateWindow failed: VGLITE_CreateWindow() returned error %d\n", error);

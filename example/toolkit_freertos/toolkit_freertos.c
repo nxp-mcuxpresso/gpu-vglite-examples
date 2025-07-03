@@ -106,6 +106,10 @@ static int win_cx, win_cy;
 
 static UILayers_t g_layers = UI_LAYER_DATA(svgt12_test);
 
+#if (USE_BUFFER_COMPRESSION == 1)
+static vg_lite_compression_info_t c_info;
+#endif
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -151,7 +155,18 @@ static vg_lite_error_t init_vg_lite(void)
         return error;
     }
     // Initialize the window.
-    error = VGLITE_CreateWindow(&display, &window);
+#if (USE_BUFFER_COMPRESSION == 1)
+    error = VGLITE_SetCompressionInfo(&c_info);
+    if (error)
+    {
+        PRINTF("VGLITE_SetCompressionInfo failed: VGLITE_SetCompressionInfo() returned error %d\r\n", error);
+        cleanup();
+        return error;
+    }
+    error = VGLITE_CreateWindow(&display, &window, &c_info);
+#else
+    error = VGLITE_CreateWindow(&display, &window, NULL);
+#endif
     if (error)
     {
         PRINTF("VGLITE_CreateWindow failed: VGLITE_CreateWindow() returned error %d\r\n", error);

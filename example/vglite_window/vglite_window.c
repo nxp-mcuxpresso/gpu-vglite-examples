@@ -76,6 +76,10 @@ static vg_lite_buffer_format_t video_format_to_vglite(video_pixel_format_t forma
             fmt = VG_LITE_BGRX8888;
             break;
 
+        case kVIDEO_PixelFormatARGB8888Hsample:
+            fmt = VG_LITE_BGRA8888;
+            break;
+
         default:
             fmt = VG_LITE_RGB565;
             break;
@@ -95,7 +99,9 @@ vg_lite_error_t VGLITE_CreateDisplay(vg_lite_display_t *display)
     return VG_LITE_SUCCESS;
 }
 
-vg_lite_error_t VGLITE_CreateWindow(vg_lite_display_t *display, vg_lite_window_t *window)
+vg_lite_error_t VGLITE_CreateWindow(vg_lite_display_t *display,
+                                    vg_lite_window_t *window,
+                                    vg_lite_compression_info_t *c_info)
 {
     vg_lite_error_t ret = VG_LITE_SUCCESS;
     status_t status;
@@ -116,7 +122,16 @@ vg_lite_error_t VGLITE_CreateWindow(vg_lite_display_t *display, vg_lite_window_t
     g_fbInfo->bufInfo.startY      = DEMO_BUFFER_START_Y;
     g_fbInfo->bufInfo.width       = window->width;
     g_fbInfo->bufInfo.height      = window->height;
-    g_fbInfo->bufInfo.strideBytes = DEMO_BUFFER_STRIDE_BYTE;
+    if (c_info)
+    {
+        g_fbInfo->bufInfo.pixelFormat = c_info->pixelFormat;
+        g_fbInfo->bufInfo.strideBytes = c_info->strideBytes;
+    }
+    else
+    {
+        g_fbInfo->bufInfo.pixelFormat = DEMO_BUFFER_PIXEL_FORMAT;
+        g_fbInfo->bufInfo.strideBytes = DEMO_BUFFER_STRIDE_BYTE;
+    }
 
     g_fbInfo->bufferCount = window->bufferCount;
     for (uint8_t i = 0; i < window->bufferCount; i++)
@@ -128,7 +143,12 @@ vg_lite_error_t VGLITE_CreateWindow(vg_lite_display_t *display, vg_lite_window_t
         vg_buffer->width     = g_fbInfo->bufInfo.width;
         vg_buffer->height    = g_fbInfo->bufInfo.height;
         vg_buffer->stride    = g_fbInfo->bufInfo.strideBytes;
-        vg_buffer->format    = video_format_to_vglite(DEMO_BUFFER_PIXEL_FORMAT);
+        if (c_info)
+        {
+            vg_buffer->compress_mode = c_info->compressionMode;
+        }
+        vg_buffer->format    = video_format_to_vglite(g_fbInfo->bufInfo.pixelFormat);
+        memset((void *)g_fbInfo->buffers[i], 0, g_fbInfo->bufInfo.height * g_fbInfo->bufInfo.strideBytes);
     }
 
     status = FBDEV_SetFrameBufferInfo(g_fbdev, g_fbInfo);
@@ -141,8 +161,6 @@ vg_lite_error_t VGLITE_CreateWindow(vg_lite_display_t *display, vg_lite_window_t
     buffer = FBDEV_GetFrameBuffer(g_fbdev, 0);
 
     assert(buffer != NULL);
-
-    memset(buffer, 0, g_fbInfo->bufInfo.height * g_fbInfo->bufInfo.strideBytes);
 
     FBDEV_SetFrameBuffer(g_fbdev, buffer, 0);
 
@@ -189,4 +207,15 @@ void VGLITE_SwapBuffers(vg_lite_window_t *window)
 
 
     FBDEV_SetFrameBuffer(&window->display->g_fbdev, rt->memory, 0);
+}
+
+vg_lite_error_t VGLITE_SetCompressionInfo(vg_lite_compression_info_t *c_info)
+{
+    if (!c_info)
+        return VG_LITE_INVALID_ARGUMENT;
+    c_info->pixelFormat = kVIDEO_PixelFormatARGB8888Hsample;
+    c_info->strideBytes = DEMO_BUFFER_WIDTH * 4;
+    c_info->compressionMode = VG_LITE_DEC_HSAMPLE;
+
+    return VG_LITE_SUCCESS;
 }

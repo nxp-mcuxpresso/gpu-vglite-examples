@@ -85,6 +85,10 @@ static vg_lite_path_t path = {{-10, -10,         // left,top
 static vg_lite_matrix_t matrix;
 static vg_lite_buffer_t tiled_buffer;
 
+#if (USE_BUFFER_COMPRESSION == 1)
+static vg_lite_compression_info_t c_info;
+#endif
+
 /*******************************************************************************
  * Code
  ******************************************************************************/
@@ -124,7 +128,18 @@ static vg_lite_error_t init_vg_lite(void)
         return error;
     }
     // Initialize the window.
-    error = VGLITE_CreateWindow(&display, &window);
+#if (USE_BUFFER_COMPRESSION == 1)
+    error = VGLITE_SetCompressionInfo(&c_info);
+    if (error)
+    {
+        PRINTF("VGLITE_SetCompressionInfo failed: VGLITE_SetCompressionInfo() returned error %d\n", error);
+        cleanup();
+        return error;
+    }
+    error = VGLITE_CreateWindow(&display, &window, &c_info);
+#else
+    error = VGLITE_CreateWindow(&display, &window, NULL);
+#endif
     if (error)
     {
         PRINTF("VGLITE_CreateWindow failed: VGLITE_CreateWindow() returned error %d\n", error);
