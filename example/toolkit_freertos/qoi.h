@@ -743,7 +743,7 @@ void *qoi_decode(const void *data, int size, qoi_desc *desc, int channels) {
 			}
 			else if ((b1 & QOI_MASK_2) == QOI_OP_INDEX) {
 				/* Prevent speculative execution data leak */
-				px = index[b1 & 3f];
+				px = index[b1 & 0x3f];
 			}
 			else if ((b1 & QOI_MASK_2) == QOI_OP_DIFF) {
 				px.rgba.r += ((b1 >> 4) & 0x03) - 2;

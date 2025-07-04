@@ -96,7 +96,7 @@ typedef struct stroke_info {
 
 typedef struct msg_glyph_item {
     uint16_t g_u16; /* Unicode number of glyph */
-    uint16_t k; /* kerning difference between g1 -> g2 transition */
+    int32_t k; /* kerning difference between g1 -> g2 transition */
 } msg_glyph_item_t;
 
 typedef struct svg_text_string_data {
