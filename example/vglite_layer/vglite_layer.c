@@ -597,6 +597,8 @@ int layer_draw(vg_lite_buffer_t *rt, UILayers_t *layer, vg_lite_matrix_t *transf
 		vg_lite_matrix_t tmatrix;
         char type = layer->img_info->render_sequence[idx];
 
+        vg_lite_identity(&tmatrix);
+
         switch ((svg_node_t)type) {
             case eRectNode:
             case eCircleNode:
