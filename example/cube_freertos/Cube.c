@@ -50,7 +50,7 @@ static vg_lite_window_t window;
 #define VGLITE_COMMAND_BUFFER_SZ (64 * 1024)
 /* On RT595S */
 #if defined(MIMXRT595S_cm33_SERIES) || defined(MIMXRT798S_cm33_core0_SERIES)
-#define VGLITE_HEAP_SZ 0x400000 /* 4 MB */
+#define VGLITE_HEAP_SZ 0x100000 /* 1 MB */
 /* On RT1170 / RT1160 */
 #elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
       defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
