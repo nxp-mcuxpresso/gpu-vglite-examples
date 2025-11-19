@@ -730,9 +730,9 @@ int layer_init(UILayers_t *layer)
     uint32_t data_size;
     for (i = 0; i < layer->img_info->path_count; i++) {
         path_info_t *path_info = &layer->img_info->paths_info[i];
-        data_size = vg_lite_get_path_length(path_info->path_cmds, path_info->path_length, VG_LITE_S32);
+        data_size = vg_lite_get_path_length(path_info->path_cmds, path_info->path_length, path_info->path_data_type);
 
-        vg_err = vg_lite_init_path(&layer->handle[i], layer->img_info->data_format, VG_LITE_MEDIUM,
+        vg_err = vg_lite_init_path(&layer->handle[i], path_info->path_data_type, VG_LITE_MEDIUM,
                data_size, NULL, 0, 0, 0, 0);
         if (vg_err != VG_LITE_SUCCESS) {
 		    PRINTF("\r\nERROR: Failed to initialize graphic artifacts!\r\n\r\n");
