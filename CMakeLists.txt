@@ -54,15 +54,12 @@ if(CONFIG_MCUX_COMPONENT_middleware.vglite)
             -Wno-unused-parameter       \
             -Wno-enum-conversion        \
             -Wno-int-conversion         \
-            -Wno-nonstandard-extension  \
             -Wno-sign-compare"
         CX  "-fms-extensions            \
             -Wno-unused-variable        \
             -Wno-unused-function        \
             -Wno-unused-parameter       \
             -Wno-enum-conversion        \
-            -Wno-int-conversion         \
-            -Wno-nonstandard-extension  \
             -Wno-sign-compare"
     )
 
