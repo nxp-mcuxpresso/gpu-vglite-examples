@@ -500,8 +500,8 @@ vg_lite_error_t layer_font_glyph_cache_find(font_info_t *font, uint16_t g_u16, f
 
     /* Create handle from glyph path_info */
     cacheIdx = i;
-    text_data_size = vg_lite_get_path_length(font->gi[gIdx].path_cmds, font->gi[gIdx].path_length, VG_LITE_S32);
-    vg_err = vg_lite_init_path(&g_font_glyph_cache[cacheIdx].handle, VG_LITE_S32, VG_LITE_MEDIUM,
+    text_data_size = vg_lite_get_path_length(font->gi[gIdx].path_cmds, font->gi[gIdx].path_length, font->gi[gIdx].path_data_type);
+    vg_err = vg_lite_init_path(&g_font_glyph_cache[cacheIdx].handle, font->gi[gIdx].path_data_type, VG_LITE_MEDIUM,
                     text_data_size, NULL, 0, 0, 0, 0);
     if (vg_err != VG_LITE_SUCCESS) {
         PRINTF("\r\nERROR: Failed to initialize graphic artifacts!\r\n\r\n");
