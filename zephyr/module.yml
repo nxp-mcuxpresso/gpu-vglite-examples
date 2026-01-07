@@ -1,0 +1,12 @@
+name: vglite_examples
+build:
+  cmake-ext: True
+samples:
+  - tile
+  - clock
+  - cube
+  - decompress_etc2
+  - tiger
+  - toolkit
+  - vector
+
