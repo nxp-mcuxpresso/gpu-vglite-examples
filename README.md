@@ -1,1 +1,0 @@
-VGLite examples source repository
