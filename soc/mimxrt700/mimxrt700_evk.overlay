@@ -5,3 +5,31 @@
 &sram0 {
 	reg = <0x20080000 0x005FE000>; /* 6136 KB */
 };
+
+ / {
+    aliases {
+        sram-ext = &psram1;
+    };
+};
+
+/* Disable OS timer and enable SysTick */
+&os_timer_cpu0 {
+    status = "disabled";
+    wakeup-source;
+};
+
+&systick {
+    status = "okay";
+};
+
+/* Move MEMC region base */
+&memc {
+    status = "okay";
+    reg = <0x70000000 DT_SIZE_M(32)>;
+};
+
+/* Override the PSRAM region using its label */
+&psram {
+    reg = <0x70000000 DT_SIZE_M(32)>;
+    zephyr,memory-region = "PSRAM";
+};
