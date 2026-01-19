@@ -15,3 +15,11 @@
 &aps6408l {
 	spi-max-frequency = <DT_FREQ_M(396)>;
 };
+
+&os_timer {
+	status = "disabled";
+};
+
+&systick {
+	status = "okay";
+};
