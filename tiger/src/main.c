@@ -23,7 +23,7 @@
 #define VGLITE_PRIORITY   			K_HIGHEST_THREAD_PRIO
 #define VGLITE_COMMAND_BUFFER_SZ 	(128 * 1024)
 
-#if (720 * 1280 == (DEMO_PANEL_WIDTH) * (DEMO_PANEL_HEIGHT))
+#if (720 * 1280 == (DISPLAY_WIDTH) * (DISPLAY_HEIGHT))
 #define TW 720
 /* On RT595S */
 #if defined(CONFIG_SOC_MIMXRT595S_CM33)
@@ -102,7 +102,7 @@ static vg_lite_error_t init_vg_lite(vg_lite_display_t *display)
 	}
 
 	/* Initialize the draw. */
-	error = vg_lite_init(DEFAULT_VG_LITE_TW_WIDTH, DEFAULT_VG_LITE_TW_HEIGHT);
+	error = vg_lite_init(TW, TH);
 	if (error) {
 		printk("vg_lite engine init failed: vg_lite_init() returned error %d\n", error);
 		cleanup();
