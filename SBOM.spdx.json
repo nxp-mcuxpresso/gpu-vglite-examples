@@ -2,20 +2,20 @@
   "SPDXID": "SPDXRef-DOCUMENT",
   "spdxVersion": "SPDX-2.3",
   "creationInfo": {
-    "created": "2025-06-12T08:21:33Z",
+    "created": "2026-02-24T09:19:23Z",
     "creators": [
       "Organization: NXP"
     ],
-    "licenseListVersion": "3.20"
+    "licenseListVersion": "3.26"
   },
-  "name": "gpu-vglite-examples-v25.06.00",
+  "name": "gpu-vglite-examples-REL_VGLITE_EXAMPLES_ZEPHYR_v4.3",
   "dataLicense": "CC0-1.0",
-  "documentNamespace": "https://nxp.com/spdx/a595421e-9773-4316-b2d1-7c01c33efb39",
+  "documentNamespace": "https://nxp.com/spdx/34468b5e-09bd-452a-9a0c-f661fd9e7c98",
   "packages": [
     {
-      "SPDXID": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
+      "SPDXID": "SPDXRef-package-34468b5e-09bd-452a-9a0c-f661fd9e7c98",
       "name": "gpu-vglite-examples",
-      "versionInfo": "v25.06.00",
+      "versionInfo": "REL_VGLITE_EXAMPLES_ZEPHYR_v4.3",
       "licenseConcluded": "(BSD-3-Clause)",
       "licenseDeclared": "(BSD-3-Clause)",
       "downloadLocation": "https://github.com/nxp-mcuxpresso/gpu-vglite-examples",
@@ -25,61 +25,58 @@
       "filesAnalyzed": false
     },
     {
-      "SPDXID": "SPDXRef-package-8e93f52d-6967-45c0-b6a6-9deca6506e23",
-      "name": "vglite",
-      "versionInfo": "v25.06.00",
-      "licenseConcluded": "MIT",
-      "licenseDeclared": "MIT",
-      "homepage": "https://github.com/nxp-mcuxpresso/gpu-vglite",
-      "downloadLocation": "https://github.com/nxp-mcuxpresso/gpu-vglite",
-      "originator": "Organization: NXP",
-      "supplier": "NOASSERTION",
-      "externalRefs": [],
-      "filesAnalyzed": false
-    },
-    {
-      "SPDXID": "SPDXRef-package-08d113b3-14b4-481e-ac16-9084ee62b693",
-      "name": "FreeRTOS Real Time Kernel",
-      "versionInfo": "202111.00",
-      "licenseConcluded": "MIT",
-      "licenseDeclared": "MIT",
-      "homepage": "https://github.com/FreeRTOS/FreeRTOS",
-      "downloadLocation": "NOASSERTION",
-      "originator": "Organization: freertos",
+      "SPDXID": "SPDXRef-package-bd33cfa9-df40-4dfc-b13c-656016614fab",
+      "name": "fpng-rs",
+      "versionInfo": "1.0.6",
+      "licenseConcluded": "(Apache-2.0 OR MIT)",
+      "licenseDeclared": "(Apache-2.0 OR MIT)",
+      "homepage": "https://crates.io/crates/fpng-rs",
+      "downloadLocation": "https://crates.io/crates/fpng-rs/1.0.6",
+      "originator": "Organization: crates",
       "supplier": "NOASSERTION",
       "externalRefs": [
         {
-          "referenceCategory": "SECURITY",
-          "referenceLocator": "cpe:2.3:o:amazon:freertos:202111.00:*:*:*:*:*:*:*",
-          "referenceType": "cpe23Type"
-        },
-        {
-          "referenceCategory": "PACKAGE-MANAGER",
-          "referenceLocator": "pkg:github/FreeRTOS/FreeRTOS@202111.00",
-          "referenceType": "purl"
-        },
-        {
           "referenceCategory": "OTHER",
-          "referenceLocator": "b6b546b4-648e-4af6-a94f-14512c155456",
+          "referenceLocator": "c7a030cc-ee4f-4cce-af4d-2f01729b318a",
           "referenceType": "BlackDuck-ComponentOrigin"
         },
         {
-          "referenceCategory": "SECURITY",
-          "referenceLocator": "cpe:2.3:o:amazon:freertos+fat:202111.00:*:*:*:*:*:*:*",
-          "referenceType": "cpe23Type"
-        },
-        {
-          "referenceCategory": "SECURITY",
-          "referenceLocator": "cpe:2.3:a:amazon:freertos:202111.00:*:*:*:*:*:*:*",
-          "referenceType": "cpe23Type"
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceLocator": "pkg:cargo/fpng-rs@1.0.6",
+          "referenceType": "purl"
         }
       ],
       "filesAnalyzed": false
     },
     {
-      "SPDXID": "SPDXRef-package-63bffc3e-6149-4ad8-96fc-3041926cca21",
+      "SPDXID": "SPDXRef-package-0f90f27f-2c40-4a53-9ee5-e1e7afa052e7",
+      "name": "Khronos Group - OpenVG",
+      "versionInfo": "1.1",
+      "licenseConcluded": "MIT",
+      "licenseDeclared": "MIT",
+      "homepage": "http://www.khronos.org/openvg/",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: Khronos Group - OpenVG",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-5f7d1554-d815-482d-8943-957dd73c8a82",
+      "name": "nxp-mcuxpresso/mcux-sdk",
+      "versionInfo": "MCUX_2.16.000",
+      "licenseConcluded": "BSD-3-Clause",
+      "licenseDeclared": "BSD-3-Clause",
+      "downloadLocation": "NOASSERTION",
+      "originator": "Organization: nxp-mcuxpresso/mcux-sdk",
+      "supplier": "NOASSERTION",
+      "externalRefs": [],
+      "filesAnalyzed": false
+    },
+    {
+      "SPDXID": "SPDXRef-package-7df6d25e-1a7f-4f92-bb52-81c9aac9184f",
       "name": "qoi",
-      "versionInfo": "0+git20220615+ds",
+      "versionInfo": "0+git20251213+ds",
       "licenseConcluded": "MIT",
       "licenseDeclared": "MIT",
       "homepage": "https://github.com/phoboslab/qoi",
@@ -94,22 +91,27 @@
     {
       "spdxElementId": "SPDXRef-DOCUMENT",
       "relationshipType": "DESCRIBES",
-      "relatedSpdxElement": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39"
+      "relatedSpdxElement": "SPDXRef-package-34468b5e-09bd-452a-9a0c-f661fd9e7c98"
     },
     {
-      "spdxElementId": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
+      "spdxElementId": "SPDXRef-package-34468b5e-09bd-452a-9a0c-f661fd9e7c98",
       "relationshipType": "CONTAINS",
-      "relatedSpdxElement": "SPDXRef-package-08d113b3-14b4-481e-ac16-9084ee62b693"
+      "relatedSpdxElement": "SPDXRef-package-0f90f27f-2c40-4a53-9ee5-e1e7afa052e7"
     },
     {
-      "spdxElementId": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
+      "spdxElementId": "SPDXRef-package-34468b5e-09bd-452a-9a0c-f661fd9e7c98",
       "relationshipType": "CONTAINS",
-      "relatedSpdxElement": "SPDXRef-package-63bffc3e-6149-4ad8-96fc-3041926cca21"
+      "relatedSpdxElement": "SPDXRef-package-5f7d1554-d815-482d-8943-957dd73c8a82"
     },
     {
-      "spdxElementId": "SPDXRef-package-a595421e-9773-4316-b2d1-7c01c33efb39",
-      "relationshipType": "DYNAMIC_LINK",
-      "relatedSpdxElement": "SPDXRef-package-8e93f52d-6967-45c0-b6a6-9deca6506e23"
+      "spdxElementId": "SPDXRef-package-34468b5e-09bd-452a-9a0c-f661fd9e7c98",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-7df6d25e-1a7f-4f92-bb52-81c9aac9184f"
+    },
+    {
+      "spdxElementId": "SPDXRef-package-34468b5e-09bd-452a-9a0c-f661fd9e7c98",
+      "relationshipType": "CONTAINS",
+      "relatedSpdxElement": "SPDXRef-package-bd33cfa9-df40-4dfc-b13c-656016614fab"
     }
   ]
 }
