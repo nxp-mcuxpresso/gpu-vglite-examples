@@ -30,7 +30,8 @@
 #elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
       defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
       defined(MIMXRT1171_SERIES)     || defined(MIMXRT1166_cm7_SERIES) || \
-      defined(MIMXRT1165_cm7_SERIES)
+      defined(MIMXRT1165_cm7_SERIES) || defined(MIMXRT1152_SERIES)     || \
+      defined(MIMXRT1150_SERIES)
 #define TILED_BUFFER1_ADDR 0x80400000U
 #else
 #error "Unsupported CPU"

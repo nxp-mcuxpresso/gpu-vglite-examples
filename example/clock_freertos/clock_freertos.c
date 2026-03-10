@@ -64,7 +64,8 @@ static vg_lite_window_t window;
 #elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
       defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
       defined(MIMXRT1171_SERIES)     || defined(MIMXRT1166_cm7_SERIES) || \
-      defined(MIMXRT1165_cm7_SERIES)
+      defined(MIMXRT1165_cm7_SERIES) || defined(MIMXRT1152_SERIES)     || \
+      defined(MIMXRT1150_SERIES)
 #define VGLITE_HEAP_SZ 8912896 /* 8.5 MB */
 #else
 #error "Unsupported CPU !"
@@ -83,7 +84,8 @@ static vg_lite_window_t window;
 #elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
       defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
       defined(MIMXRT1171_SERIES)     || defined(MIMXRT1166_cm7_SERIES) || \
-      defined(MIMXRT1165_cm7_SERIES)
+      defined(MIMXRT1165_cm7_SERIES) || defined(MIMXRT1152_SERIES)     || \
+      defined(MIMXRT1150_SERIES)
 /* Tessellation window = 720 x 1280 */
 #define TH 1280
 #else
