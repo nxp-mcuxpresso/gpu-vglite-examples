@@ -20,7 +20,7 @@ __aligned(FRAME_BUFFER_ALIGN) static uint8_t s_frameBufferAddress[APP_BUFFER_COU
 #else
 __aligned(128) __section(".lvgl_buf") uint8_t framebuffer0[FRAME_BUFFER_SIZE];
 __aligned(128) __section(".lvgl_buf") uint8_t framebuffer1[FRAME_BUFFER_SIZE];
-static const uint32_t s_frameBufferAddress[APP_BUFFER_COUNT] = {
+static uint8_t * const s_frameBufferAddress[APP_BUFFER_COUNT] = {
 	framebuffer0,
 #if APP_BUFFER_COUNT > 1
 	framebuffer1,

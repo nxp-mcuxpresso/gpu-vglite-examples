@@ -6,6 +6,10 @@
  */
 
 #include "vglite_layer.h"
+#include <zephyr/sys/printk.h>
+
+void *vg_lite_os_malloc(size_t size);
+void vg_lite_os_free(void *memory);
 
 #define QOI_MALLOC(sz) vg_lite_os_malloc(sz)
 #define QOI_FREE(p)    vg_lite_os_free(p)
