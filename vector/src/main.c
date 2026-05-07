@@ -109,20 +109,6 @@ static vg_lite_error_t init_vg_lite(vg_lite_display_t *display)
 		       error);
 		return error;
 	}
-	/* Set GPU command buffer size for this drawing task. */
-	error = vg_lite_set_command_buffer_size(VG_LITE_COMMAND_BUFFER_SIZE);
-	if (error) {
-		printk("vg_lite_set_command_buffer_size() returned error %d\n", error);
-		cleanup();
-		return error;
-	}
-	/* Initialize the draw. */
-	error = vg_lite_init(DEFAULT_VG_LITE_TW_WIDTH, DEFAULT_VG_LITE_TW_HEIGHT);
-	if (error) {
-		printk("vg_lite engine init failed: vg_lite_init() returned error %d\n", error);
-		cleanup();
-		return error;
-	}
 
 	return error;
 }
