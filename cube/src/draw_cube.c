@@ -12,6 +12,7 @@
 #include "draw_clock.h"
 #include "path_nxplogo.h"
 #include "path_tiger.h"
+#include <zephyr/sys/printk.h>
 
 /*******************************************************************************
  * Definitions

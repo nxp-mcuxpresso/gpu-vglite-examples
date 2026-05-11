@@ -125,7 +125,7 @@ static vg_lite_error_t init_vg_lite(vg_lite_display_t *display)
 	tiled_buffer.tiled = VG_LITE_TILED;
 	tiled_buffer.format = VG_LITE_RGB565;
 	tiled_buffer.memory = (void *)tiled_fb_mem;
-	tiled_buffer.address = tiled_fb_mem;
+	tiled_buffer.address = (vg_lite_uint32_t)(uintptr_t)tiled_fb_mem;
 
 	/* Align stride to 64 bytes (required for the tiled raster images) */
 	if (tiled_buffer.stride & 0x3f) {
