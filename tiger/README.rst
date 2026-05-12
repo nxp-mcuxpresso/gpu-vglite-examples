@@ -117,7 +117,7 @@ Example building for :zephyr:board:`mimxrt700_evk`:
 
 .. code-block:: bash
 
-   west build -p always -b mimxrt700_evk/mimxrt798s/cm33_cpu0 modules/gpu-vglite-examples/tiger/ --shield rk055hdmipi4ma0 -DCONFIG_DEBUG=y -DCONFIG_DEBUG_OPTIMIZATIONS=n -DCMAKE_BUILD_TYPE=Debug -DVGLITE_OS=zephyr -DDTC_OVERLAY_FILE=$(west topdir)/modules/gpu-vglite-examples/soc/mimxrt700/mimxrt700_evk.overlay -DVGLITE_PLATFORM=rt700 -DEXTRA_CPPFLAGS="-DCPU_MIMXRT798SGFOA_cm33_core0"
+   west build -p always -b mimxrt700_evk/mimxrt798s/cm33_cpu0 modules/gpu-vglite-examples/tiger/ --shield rk055hdmipi4ma0 -DCONFIG_DEBUG=y -DCONFIG_DEBUG_OPTIMIZATIONS=n -DCMAKE_BUILD_TYPE=Debug -DVGLITE_OS=zephyr -DDTC_OVERLAY_FILE=$(west topdir)/modules/gpu-vglite-examples/soc/mimxrt700/mimxrt700_evk.overlay -DVGLITE_PLATFORM=rt700
 
 .. code-block:: bash
 
@@ -148,7 +148,7 @@ For :zephyr:board:`mimxrt700_evk`:
 
 .. code-block:: bash
 
-   west build -p always -b mimxrt700_evk/mimxrt798s/cm33_cpu0 modules/gpu-vglite-examples/tiger/ --shield rk055hdmipi4ma0 -DVGLITE_OS=zephyr -DDTC_OVERLAY_FILE=$(west topdir)/modules/gpu-vglite-examples/soc/mimxrt700/mimxrt700_evk.overlay -DVGLITE_PLATFORM=rt700 -DEXTRA_CPPFLAGS="-DCPU_MIMXRT798SGFOA_cm33_core0"
+   west build -p always -b mimxrt700_evk/mimxrt798s/cm33_cpu0 modules/gpu-vglite-examples/tiger/ --shield rk055hdmipi4ma0 -DVGLITE_OS=zephyr -DDTC_OVERLAY_FILE=$(west topdir)/modules/gpu-vglite-examples/soc/mimxrt700/mimxrt700_evk.overlay -DVGLITE_PLATFORM=rt700
 
 For :zephyr:board:`mimxrt595_evk`:
 
