@@ -137,6 +137,17 @@ Example building for :zephyr:board:`mimxrt595_evk`:
 
    west flash
 
+Example building for :zephyr:board:`mimxrt1160_evk`:
+
+.. code-block:: bash
+
+   west build -p always -b mimxrt1160_evk/mimxrt1166/cm7 modules/gpu-vglite-examples/tile/ --shield rk055hdmipi4m -DCONFIG_DEBUG_OPTIMIZATIONS=n -DCMAKE_BUILD_TYPE=Debug -DVGLITE_OS=zephyr -DVGLITE_PLATFORM=rt1160
+
+
+.. code-block:: bash
+
+   west flash
+
 Release Build
 =============
 
@@ -159,6 +170,12 @@ For :zephyr:board:`mimxrt595_evk`:
 .. code-block:: bash
 
    west build -p always -b mimxrt595_evk/mimxrt595s/cm33 modules/gpu-vglite-examples/vector/ --shield rk055hdmipi4ma0 -- -DDTC_OVERLAY_FILE="$(west topdir)/modules/gpu-vglite-examples/soc/mimxrt595/mimxrt595_evk.overlay" -DVGLITE_OS=zephyr -DVGLITE_PLATFORM=rt500
+
+for :zephyr:board:`mimxrt1160_evk`:
+
+.. code-block:: bash
+
+   west build -p always -b mimxrt1160_evk/mimxrt1166/cm7 modules/gpu-vglite-examples/tile/ --shield rk055hdmipi4m  -DVGLITE_OS=zephyr -DVGLITE_PLATFORM=rt1160
 
 Running the Demo
 ================
@@ -191,7 +208,7 @@ Display Shield Configuration
 The default configuration uses the RK055MHD091 MIPI panel. To use different panels,
 configure the appropriate shield overlay:
 
-- ``rk055hdmipi4m`` - For RT1170 EVK (RK055MHD091)
+- ``rk055hdmipi4m`` - For RT1170 and RT1160 EVK (RK055MHD091)
 - ``rk055hdmipi4ma0`` - For RT595 and RT700 EVKs (RK055AHD091)
 
 Board-Specific Requirements
