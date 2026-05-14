@@ -49,6 +49,12 @@ vg_lite_error_t VGLITE_CreateWindow(vg_lite_display_t *display, vg_lite_window_t
 		vg_buffer->format = VG_LITE_BGR565;
 		vg_buffer->tiled = VG_LITE_LINEAR;
 
+#if defined(CONFIG_SOC_MIMXRT798S_CM33_CPU0)
+		/* Align stride to 64 bytes (required for the tiled raster images) */
+		if (vg_buffer->stride & 0x3f) {
+			vg_buffer->stride = (vg_buffer->stride & (~(uint32_t)0x3f)) + 64;
+		}
+#endif
 		memset(vg_buffer->memory, 0, vg_buffer->height * vg_buffer->stride);
 	}
 
