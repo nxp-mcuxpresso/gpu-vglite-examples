@@ -28,7 +28,7 @@
 #elif defined(MIMXRT595S_cm33_SERIES)
 #define TILED_BUFFER1_ADDR 0x28400000U
 #elif defined(MIMXRT1152_SERIES)     || defined(MIMXRT1150_SERIES)
-#define TILED_BUFFER1_ADDR 0x60000000U
+#define TILED_BUFFER1_ADDR 0x60400000U
 #elif defined(MIMXRT1176_cm7_SERIES) || defined(MIMXRT1175_cm7_SERIES) || \
       defined(MIMXRT1173_cm7_SERIES) || defined(MIMXRT1172_SERIES)     || \
       defined(MIMXRT1171_SERIES)     || defined(MIMXRT1166_cm7_SERIES) || \
